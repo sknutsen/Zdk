@@ -1,0 +1,26 @@
+﻿<div style="display: inline-flex;">
+    <label style="margin: 10px;">
+        Group: 
+        <select style="min-width: 200px; height: 30px;" @onchange="@((e) => OnChanged.InvokeAsync(e.Value))">
+            @foreach (var g in Groups)
+            {
+                <option value="@g.GroupId" selected="@(g.GroupId == Group)">@g.GroupName</option>
+            }
+        </select>
+    </label>
+</div>
+
+@code {
+    [Parameter]
+    public List<Group> Groups { get; set; } = new();
+
+    [Parameter]
+    public int Group { get; set; }
+
+    [Parameter]
+    public EventCallback<int> GroupChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<object?> OnChanged { get; set; }
+
+}

@@ -1,0 +1,243 @@
+﻿@page "/ShoppingLists"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.AspNetCore.SignalR.Client
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+@attribute [Authorize]
+
+<h3 @onclick="() => shoppingList = null">Shopping lists</h3>
+
+@if (groups is not null)
+{
+    <GroupSelect Groups="groups" @bind-Group="sessionGroup" OnChanged="ChangeGroup" />
+}
+
+@if (shoppingList is not null)
+{
+    <button @onclick="() => shoppingList = null">Go back</button>
+    <ItemsComponent @bind-ShoppingList="shoppingList" @bind-NewItem="newItem" Update="UpdateItem" Delete="DeleteItem" OnSubmit="SendItem" />
+}
+else if (shoppingLists is not null)
+{
+    <ShoppingListsComponent ShoppingLists="shoppingLists" @bind-ShoppingList="shoppingList" @bind-NewShoppingList="newShoppingList" Delete="DeleteList" OnSubmit="SendList" />
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    private List<Group> groups;
+    private List<ShoppingList> shoppingLists;
+    private ShoppingList? shoppingList;
+    private ShoppingList newShoppingList = new();
+    private UserSession session;
+    private Item newItem = new();
+    private HubConnection? shoppingListHubConnection;
+    private HubConnection? userHubConnection;
+
+    private int sessionGroup
+    {
+        get => session.GroupId;
+        set
+        {
+            session.GroupId = value;
+        }
+    }
+
+    public bool IsConnectedSL =>
+        shoppingListHubConnection?.State == HubConnectionState.Connected;
+
+    public bool IsConnectedU =>
+        userHubConnection?.State == HubConnectionState.Connected;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            shoppingListHubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/shoppinglistshub"))
+                .WithAutomaticReconnect()
+                .Build();
+
+            shoppingListHubConnection.On<List<ShoppingList>>(ShoppingListsHubMethodNames.ReceiveData, (list) =>
+            {
+                shoppingLists = list;
+
+                if (shoppingList is not null)
+                {
+                    shoppingList = shoppingLists.Find(e => e.ShoppingListId == shoppingList.ShoppingListId) ?? null;
+                }
+                Console.WriteLine($"Recieved lists");
+
+                StateHasChanged();
+            });
+
+            await shoppingListHubConnection.StartAsync();
+
+            userHubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/userhub"))
+                .WithAutomaticReconnect()
+                .Build();
+
+            userHubConnection.On<List<Group>>(UserManagementHubMethodNames.GetGroups, (list) =>
+            {
+                groups = list;
+                Console.WriteLine($"Recieved groups");
+
+                StateHasChanged();
+            });
+
+            userHubConnection.On<UserSession>(UserManagementHubMethodNames.GetUserSession, async (s) =>
+            {
+                if (session is not null)
+                {
+                    await JoinClientGroup();
+                }
+
+                session = s;
+
+                await GetLists();
+                Console.WriteLine($"Recieved session");
+
+                StateHasChanged();
+            });
+
+            await userHubConnection.StartAsync();
+
+            newItem.Amount = 1;
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (HttpRequestException exception)
+        {
+            if (exception.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                NavigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+            }
+        }
+    }
+
+    private async Task ChangeGroup(object? value)
+    {
+        Console.WriteLine($"value is: {value} - type: {value.GetType()}");
+        await LeaveClientGroup();
+
+        session.GroupId = Int32.Parse((string)value);
+
+        await UpdateUserSession();
+    }
+
+    private async Task GetLists()
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.SendAsync(ShoppingListsHubMethodNames.ListShoppingLists);
+            Console.WriteLine($"Getting lists");
+        }
+    }
+
+    private async Task SendList()
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            newShoppingList.Items = new List<Item>();
+            await shoppingListHubConnection.SendAsync(ShoppingListsHubMethodNames.SendShoppingList, newShoppingList);
+
+            newShoppingList = new();
+        }
+    }
+
+    private async Task SendItem()
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            newItem.ShoppingListId = shoppingList.ShoppingListId;
+
+            await shoppingListHubConnection.SendAsync(ShoppingListsHubMethodNames.SendItem, newItem);
+
+            newItem = new();
+            newItem.Amount = 1;
+        }
+    }
+
+    private async Task UpdateList(ShoppingList list)
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.SendAsync(ShoppingListsHubMethodNames.UpdateShoppingList, list);
+        }
+    }
+
+    private async Task UpdateItem(Item item)
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.SendAsync(ShoppingListsHubMethodNames.UpdateItem, item);
+        }
+    }
+
+    private async Task DeleteList(ShoppingList list)
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.SendAsync(ShoppingListsHubMethodNames.DeleteShoppingList, list);
+        }
+    }
+
+    private async Task DeleteItem(Item item)
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.SendAsync(ShoppingListsHubMethodNames.DeleteItem, item);
+        }
+    }
+
+    private async Task UpdateUserSession()
+    {
+        if (userHubConnection is not null)
+        {
+            await userHubConnection.SendAsync(UserManagementHubMethodNames.UpdateUserSession, session);
+            Console.WriteLine($"Getting session");
+        }
+    }
+
+    private async Task JoinClientGroup()
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.SendAsync(ClientGroupMethodNames.JoinGroup);
+        }
+        
+        if (userHubConnection is not null)
+        {
+            await userHubConnection.SendAsync(ClientGroupMethodNames.JoinGroup);
+        }
+    }
+
+    private async Task LeaveClientGroup()
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.SendAsync(ClientGroupMethodNames.LeaveGroup, session.GroupId);
+        }
+
+        if (userHubConnection is not null)
+        {
+            await userHubConnection.SendAsync(ClientGroupMethodNames.LeaveGroup, session.GroupId);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (shoppingListHubConnection is not null)
+        {
+            await shoppingListHubConnection.DisposeAsync();
+        }
+    }
+
+}

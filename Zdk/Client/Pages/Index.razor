@@ -1,0 +1,128 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.AspNetCore.SignalR.Client
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<PageTitle>Index</PageTitle>
+
+<div class="form-group">
+    <label>
+        Message:
+        <input @bind="messageInput" size="50" />
+    </label>
+</div>
+<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
+
+<hr>
+
+<ul id="messagesList">
+    @foreach (var message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
+
+<hr />
+
+<div class="form-group">
+    <label>
+        Temp:
+        <input @bind="tempInput" size="50" />
+    </label>
+    <label>
+        Summary:
+        <input @bind="summaryInput" size="50" />
+    </label>
+</div>
+<button @onclick="SendData" disabled="@(!IsConnected)">Send</button>
+
+<hr>
+
+<ul id="dataList">
+    @foreach (var message in data)
+    {
+        <li>@message.TemperatureC - @message.Summary - @message.Date</li>
+    }
+</ul>
+
+@code {
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+    private List<WeatherForecast> data = new List<WeatherForecast>();
+    private string? messageInput;
+    private int tempInput;
+    private string? summaryInput;
+
+    public bool IsConnected =>
+        hubConnection?.State == HubConnectionState.Connected;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/mainhub"))
+                .WithAutomaticReconnect()
+                .Build();
+
+            hubConnection.On<string, string>(MainHubMethodNames.ReceiveMessage, (user, message) =>
+            {
+                var encodedMsg = $"{user}: {message}";
+                messages.Add(encodedMsg);
+                StateHasChanged();
+            });
+
+            hubConnection.On<List<WeatherForecast>>(MainHubMethodNames.ReceiveData, (list) =>
+            {
+                data = list;
+                StateHasChanged();
+            });
+
+            await hubConnection.StartAsync();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (HttpRequestException exception)
+        {
+            if (exception.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                NavigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+            }
+        }
+    }
+
+    private async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync(MainHubMethodNames.SendMessage, messageInput);
+        }
+    }
+
+    private async Task SendData()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync(MainHubMethodNames.SendData, new WeatherForecast
+            {
+                Date = DateTime.Now,
+                TemperatureC = tempInput,
+                Summary = summaryInput
+            });
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+
+}

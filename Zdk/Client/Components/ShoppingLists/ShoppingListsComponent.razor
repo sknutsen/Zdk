@@ -1,0 +1,59 @@
+﻿<TableComponent Items="ShoppingLists">
+    <TableHeader>
+        <th style="text-align: left;">Name</th>
+        <th style="width: 10%;"></th>
+    </TableHeader>
+    <RowTemplate>
+        <td style="text-align: left;" @onclick="(() => shoppingList = context)">
+            @context.ShoppingListName
+        </td>
+        <td style="width: 10%;">
+            <button @onclick="() => Delete(context)">Delete</button>
+        </td>
+    </RowTemplate>
+    <TableFooter>
+        <td style="text-align: left;">
+            <input form="slForm" style="width:100%;" @bind="newShoppingList.ShoppingListName" />
+        </td>
+        <td style="width: 10%;">
+            <button type="submit" form="slForm">Add</button>
+        </td>
+    </TableFooter>
+</TableComponent>
+<form id="slForm" @onsubmit="OnSubmit" />
+
+@code {
+    [Parameter]
+    public List<ShoppingList> ShoppingLists { get; set; } = new();
+
+    [Parameter]
+    public ShoppingList? ShoppingList { get; set; }
+
+    [Parameter]
+    public EventCallback<ShoppingList?> ShoppingListChanged { get; set; }
+
+    private ShoppingList? shoppingList
+    {
+        get => ShoppingList;
+        set => ShoppingListChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public ShoppingList NewShoppingList { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<ShoppingList> NewShoppingListChanged { get; set; }
+
+    private ShoppingList newShoppingList
+    {
+        get => NewShoppingList;
+        set => NewShoppingListChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public Func<ShoppingList, Task> Delete { get; set; }
+
+    [Parameter]
+    public EventCallback<EventArgs> OnSubmit { get; set; }
+
+}
