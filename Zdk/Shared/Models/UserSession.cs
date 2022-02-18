@@ -19,6 +19,10 @@ public class UserSession
     [Column("group_id")]
     public int GroupId { get; set; }
 
+    [Required]
+    [Column("is_admin")]
+    public bool IsAdmin { get; set; }
+
     public UserSession() { }
 
     public UserSession(string userId)

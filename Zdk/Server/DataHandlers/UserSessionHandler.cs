@@ -66,4 +66,11 @@ public class UserSessionHandler : HandlerBase<UserSessionHandler, DataContext>
             return false;
         }
     }
+
+    public async Task<bool> IsAdmin(string userId)
+    {
+        var session = await Get(userId);
+
+        return session.IsAdmin;
+    }
 }

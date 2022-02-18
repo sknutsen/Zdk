@@ -43,7 +43,7 @@ public class UserManagementHub : Hub
         await Clients.Caller.SendAsync(UserManagementHubMethodNames.GetGroupMemberships, groupMemberships);
     }
 
-    public async Task GetGroups(bool fullList = false)
+    public async Task GetGroups()
     {
         string? userId = Context.User?.GetUserId();
 
@@ -52,7 +52,9 @@ public class UserManagementHub : Hub
             return;
         }
 
-        var groups = await groupHandler.List(userId, fullList);
+        UserSession session = await userSessionHandler.Get(userId);
+
+        var groups = await groupHandler.List(userId, session.IsAdmin);
 
         int groupId = await GetGroupId();
 
@@ -72,38 +74,51 @@ public class UserManagementHub : Hub
 
         if (!created || newGroup is null)
         {
-            await GetGroups(true);
+            await GetGroups();
             return;
         }
 
         await groupMembershipHandler.New(newGroup.GroupId, userId, false);
 
-        await GetGroups(true);
+        await GetGroups();
     }
 
     public async Task UpdateGroup(Group group)
     {
         await groupHandler.Update(group);
 
-        await GetGroups(true);
+        await GetGroups();
     }
 
     public async Task DeleteGroup(Group group)
     {
         await groupHandler.Delete(group);
 
-        await GetGroups(true);
+        await GetGroups();
     }
 
     public async Task GetUsers()
     {
         var users = await userHandler.List();
 
+        string? userId = Context.User?.GetUserId();
+        UserSession session = await userSessionHandler.Get(userId);
+
+        if (!session.IsAdmin)
+        {
+            users = users.Where(e => e.Id == userId).ToList();
+        }
+
         await Clients.Caller.SendAsync(UserManagementHubMethodNames.GetUsers, users.Select(e => new UserContainer { Id = e.Id, Name = e.UserName ?? e.Email}).ToList());
     }
 
     public async Task AddUser(UserContainer user)
     {
+        if (!await IsAdmin())
+        {
+            return;
+        }
+
         int groupId = await GetGroupId();
         await groupMembershipHandler.New(groupId, user.Id, false);
         await GetGroupMemberships();
@@ -111,6 +126,11 @@ public class UserManagementHub : Hub
 
     public async Task RemoveUser(UserContainer user)
     {
+        if (!await IsAdmin())
+        {
+            return;
+        }
+
         int groupId = await GetGroupId();
         await groupMembershipHandler.Delete(groupId, user.Id);
         await GetGroupMemberships();
@@ -145,7 +165,7 @@ public class UserManagementHub : Hub
     {
         await GetSession();
         await JoinGroup();
-        await GetGroups(true);
+        await GetGroups();
         await GetUsers();
 
         await base.OnConnectedAsync();
@@ -188,5 +208,12 @@ public class UserManagementHub : Hub
     public async Task LeaveGroup(int groupId)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupId.ToString());
+    }
+
+    private async Task<bool> IsAdmin()
+    {
+        string? userId = Context.User?.GetUserId();
+
+        return await userSessionHandler.IsAdmin(userId);
     }
 }
