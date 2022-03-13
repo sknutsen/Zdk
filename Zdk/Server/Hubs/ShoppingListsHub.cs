@@ -31,28 +31,48 @@ public class ShoppingListsHub : Hub
 
     public async Task ListShoppingLists()
     {
-        await JoinGroup();
-
         int groupId = await GetGroupId();
+        
+        await JoinGroup(groupId);
+
+        await ListShoppingLists(groupId);
+    }
+
+    public async Task ListShoppingLists(int groupId)
+    {
         var lists = await shoppingListHandler.List(groupId);
         await Clients.Group(groupId.ToString()).SendAsync(ShoppingListsHubMethodNames.ReceiveData, lists);
     }
 
     public async Task SendShoppingList(ShoppingList shoppingList)
     {
-        shoppingList.PostedBy = Context.User?.GetUserId() ?? "???";
-        shoppingList.GroupId = await GetGroupId();
+        string userId = GetUserId();
+        int groupId = await GetGroupId();
 
-        await shoppingListHandler.New(shoppingList);
+        shoppingList.PostedBy = userId;
+        shoppingList.GroupId = groupId;
 
-        await ListShoppingLists();
+        ShoppingList? addedList = await shoppingListHandler.New(shoppingList);
+
+        if (addedList is null)
+        {
+            logger.LogWarning("failed adding new list");
+            await ListShoppingLists();
+            return;
+        }
+
+        IList<ShoppingList> shoppingLists = await shoppingListHandler.List(addedList.GroupId);
+
+        await itemHandler.MoveSoldOutItems(shoppingLists, addedList.ShoppingListId);
+
+        await ListShoppingLists(groupId);
     }
 
     public async Task SendItem(Item item)
     {
         if (item.PostedBy == null)
         {
-            item.PostedBy = Context.User?.GetUserId() ?? "???";
+            item.PostedBy = GetUserId();
 
             if (item.PostedBy == "???")
             {
@@ -69,7 +89,7 @@ public class ShoppingListsHub : Hub
 
     public async Task UpdateShoppingList(ShoppingList shoppingList)
     {
-        shoppingList.PostedBy = Context.User?.GetUserId() ?? "???";
+        shoppingList.PostedBy = GetUserId();
 
         await shoppingListHandler.Update(shoppingList);
 
@@ -78,7 +98,7 @@ public class ShoppingListsHub : Hub
 
     public async Task UpdateItem(Item item)
     {
-        item.PostedBy = Context.User?.GetUserId() ?? "???";
+        item.PostedBy = GetUserId();
 
         await itemHandler.Update(item);
 
@@ -115,10 +135,17 @@ public class ShoppingListsHub : Hub
 
     private async Task<int> GetGroupId()
     {
-        string? userId = Context.User?.GetUserId();
+        string userId = GetUserId();
         UserSession session = await userSessionHandler.Get(userId);
 
         return session.GroupId;
+    }
+
+    private string GetUserId()
+    {
+        string userId = Context.User?.GetUserId() ?? "???";
+
+        return userId;
     }
 
     public async Task JoinGroup()

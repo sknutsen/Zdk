@@ -26,21 +26,21 @@ public class ShoppingListHandler : HandlerBase<ShoppingListHandler, DataContext>
         return await context.ShoppingLists.FindAsync(id);
     }
 
-    public async Task<bool> New(ShoppingList shoppingList)
+    public async Task<ShoppingList?> New(ShoppingList shoppingList)
     {
         try
         {
             shoppingList.CreatedAt = DateTime.Now;
             shoppingList.UpdatedAt = DateTime.Now;
-            await context.ShoppingLists.AddAsync(shoppingList);
+            var addResult = await context.ShoppingLists.AddAsync(shoppingList);
             await context.SaveChangesAsync();
 
-            return true;
+            return addResult.Entity;
         }
         catch (Exception)
         {
 
-            return false;
+            return null;
         }
     }
 

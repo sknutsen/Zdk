@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Zdk.Client.Pages;
 using Zdk.Server.Data;
 using Zdk.Server.DataHandlers.Base;
 using Zdk.Shared.Models;
@@ -17,26 +18,32 @@ public class ItemHandler : HandlerBase<ItemHandler, DataContext>
         return await context.Items.Where(e => e.ShoppingListId == shoppingListId).ToListAsync();
     }
 
+    public async Task<IList<Item>> List()
+    {
+        return await context.Items.ToListAsync();
+    }
+
     public async Task<Item?> Get(int id)
     {
         return await context.Items.FindAsync(id);
     }
 
-    public async Task<bool> New(Item item)
+    public async Task<Item?> New(Item item)
     {
         try
         {
             item.CreatedAt = DateTime.Now;
             item.UpdatedAt = DateTime.Now;
-            await context.Items.AddAsync(item);
+            var addResult = await context.Items.AddAsync(item);
             await context.SaveChangesAsync();
 
-            return true;
+            return addResult.Entity;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            logger.LogError(e, "New item failed");
 
-            return false;
+            return null;
         }
     }
 
@@ -50,8 +57,9 @@ public class ItemHandler : HandlerBase<ItemHandler, DataContext>
 
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            logger.LogError(e, $"Update item failed for item with id: {item.ItemId}");
 
             return false;
         }
@@ -66,10 +74,57 @@ public class ItemHandler : HandlerBase<ItemHandler, DataContext>
 
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            logger.LogError(e, $"Delete item failed for item with id: {item.ItemId}");
 
             return false;
+        }
+    }
+
+    public async Task<bool> MoveSoldOutItems(IList<ShoppingList> shoppingLists, int newList)
+    {
+        bool result = false;
+
+        try
+        {
+            foreach (ShoppingList shoppingList in shoppingLists)
+            {
+                result = await MoveSoldOutItems(shoppingList, newList);
+            }
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "MoveSoldOutItems failed");
+
+            return result;
+        }
+    }
+
+    public async Task<bool> MoveSoldOutItems(ShoppingList shoppingList, int newList)
+    {
+        bool result = false;
+
+        try
+        {
+            IList<Item> items = shoppingList.Items.Where(e => e.SoldOut).ToList();
+            foreach (Item item in items)
+            {
+                item.SoldOut = false;
+                item.ShoppingListId = newList;
+
+                result = await Update(item);
+            }
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, $"MoveSoldOutItems failed for old list: {shoppingList.ShoppingListId} -- new: {newList}");
+
+            return result;
         }
     }
 }
