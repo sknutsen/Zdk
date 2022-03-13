@@ -21,6 +21,7 @@
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
+    transition: .5s;
 }
 
     .nav-item:first-of-type {
@@ -50,13 +51,58 @@
     color: white;
 }
 
+.nav-item-icon {
+    transition: .5s;
+}
+
+@media (max-width: 640.98px) {
+    .bottom-row {
+        display: none;
+    }
+
+    .navbar-toggler-lg {
+        display: none;
+    }
+
+    .navbar-toggler-sm {
+        display: flex;
+    }
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;
     }
 
+    .bottom-row {
+        height: 3.5rem;
+        background-color: rgba(0,0,0,0.4);
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        padding-left: 0 !important;
+    }
+
+        .bottom-row > div {
+            width: 100%;
+        }
+
     .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
+    }
+
+    .nav-item-icon-lg {
+        font-size: 2rem;
+        transition: .5s;
+    }
+
+    .navbar-toggler-lg {
+        display: block;
+        margin: auto;
+    }
+
+    .navbar-toggler-sm {
+        display: none;
     }
 }

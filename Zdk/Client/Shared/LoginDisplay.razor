@@ -7,25 +7,25 @@
 <AuthorizeView>
     <Authorized>
         <div class="nav-item px-3" b-lu3ukbmal9>
-            <NavLink class="nav-link" href="authentication/profile">
-                <span class="oi oi-person" aria-hidden="true" b-lu3ukbmal9></span> @context.User.Identity.Name
+            <NavLink class="nav-link" href="Identity/Account/Manage/Index">
+                <span class="oi oi-person nav-item-icon" aria-hidden="true" b-lu3ukbmal9></span> <span class="navlink-text">@context.User.Identity.Name</span>
             </NavLink>
         </div>
         <div class="nav-item px-3" b-lu3ukbmal9>
             <NavLink class="nav-link" href="#" @onclick="BeginSignOut">
-                <span class="oi oi-account-logout" aria-hidden="true" b-lu3ukbmal9></span> Log out
+                <span class="oi oi-account-logout nav-item-icon" aria-hidden="true" b-lu3ukbmal9></span> <span class="navlink-text">Logout</span>
             </NavLink>
         </div>
     </Authorized>
     <NotAuthorized>
         <div class="nav-item px-3" b-lu3ukbmal9>
             <NavLink class="nav-link" href="authentication/register">
-                <span class="oi oi-key" aria-hidden="true" b-lu3ukbmal9></span> Register
+                <span class="oi oi-key nav-item-icon" aria-hidden="true" b-lu3ukbmal9></span> <span class="navlink-text">Register</span>
             </NavLink>
         </div>
         <div class="nav-item px-3" b-lu3ukbmal9>
             <NavLink class="nav-link" href="authentication/login">
-                <span class="oi oi-account-login" aria-hidden="true" b-lu3ukbmal9></span> Log in
+                <span class="oi oi-account-login nav-item-icon" aria-hidden="true" b-lu3ukbmal9></span> <span class="navlink-text">Log in</span>
             </NavLink>
         </div>
     </NotAuthorized>

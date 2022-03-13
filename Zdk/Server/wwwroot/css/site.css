@@ -11,7 +11,7 @@ main {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg, rgb(5, 20, 100) 0%, #000000 70%);
 }
 
 .navbar-toggler {
@@ -21,22 +21,6 @@ main {
 .top-row {
     height: 3.5rem;
     background-color: rgba(0,0,0,0.4);
-}
-
-.bottom-row {
-    height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-}
-
-    .bottom-row > div {
-        width: 100%;
-    }
-
-.navbar-toggler-lg {
-    float: right;
 }
 
 .navbar-brand {
@@ -58,6 +42,7 @@ main {
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
+    transition: .5s;
 }
 
 .nav-item:first-of-type { 
@@ -87,7 +72,23 @@ main {
         color: white;
     }
 
+.nav-item-icon {
+    transition: .5s;
+}
+
 @media (max-width: 640.98px) {
+    .top-row {
+        width: 100vw;
+    }
+
+    .bottom-row {
+        display: none;
+    }
+
+    .navbar-collapse {
+        width: 100vw;
+    }
+
     .navbar-toggler-lg {
         display: none;
     }
@@ -102,16 +103,41 @@ main {
         flex-direction: row;
     }
 
+    .sidebar-center {
+        width: 100%;
+        text-align: center;
+    }
+
     .sidebar {
         width: 250px;
         height: 100vh;
         position: sticky;
         top: 0;
+        font-size: larger;
+        transition: .5s;
+    }
+
+    .bottom-row {
+        height: 3.5rem;
+        background-color: rgba(0,0,0,0.4);
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        padding-left: 0 !important;
+    }
+
+        .bottom-row > div {
+            width: 100%;
+        }
+
+    .nav-item-icon-lg {
+        font-size: 2rem;
         transition: .5s;
     }
 
     .navbar-toggler-lg {
         display: block;
+        margin: auto;
     }
 
     .navbar-toggler-sm {

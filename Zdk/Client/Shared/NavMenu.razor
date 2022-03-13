@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Zdk</a>
+        <a id="brand-name" class="navbar-brand" href="">Zdk</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -11,22 +11,27 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <span class="oi oi-home nav-item-icon" aria-hidden="true"></span> <span class="navlink-text">Home</span>
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="ShoppingLists">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Shopping lists
+                <span class="oi oi-list-rich nav-item-icon" aria-hidden="true"></span> <span class="navlink-text">Shopping lists</span>
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="User">
-                <span class="oi oi-cog" aria-hidden="true"></span> User management
+                <span class="oi oi-cog nav-item-icon" aria-hidden="true"></span> <span class="navlink-text">User management</span>
             </NavLink>
         </div>
         <LoginDisplay />
-        <partial name="_LoginPartial" />
     </nav>
+</div>
+
+<div class="bottom-row ps-3 navbar navbar-dark">
+    <button id="navbar-toggler-lg" class="navbar-toggler navbar-toggler-lg" type="button" aria-label="Toggle navigation" onclick="toggleNav()">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </div>
 
 @code {

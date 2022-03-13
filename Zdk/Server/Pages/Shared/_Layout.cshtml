@@ -23,12 +23,13 @@
     </environment>
 </head>
 <body>
+    <script src="~/js/site.js"></script>
     <partial name="_CookieConsentPartial" optional />
     <div class="page">
         <div id="navbar" class="sidebar">
             <div class="top-row ps-3 navbar navbar-dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="">Zdk</a>
+                    <a id="brand-name" class="navbar-brand" href="">Zdk</a>
                     <button title="Navigation menu" class="navbar-toggler navbar-toggler-sm" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -39,18 +40,18 @@
             <div class="navbar-collapse collapse show">
                 <nav class="flex-column">
                     <div class="nav-item px-3">
-                        <a class="nav-link" href="" Match="NavLinkMatch.All">
-                            <span class="oi oi-home" aria-hidden="true"></span> <span class="navlink-text">Home</span>
+                        <a class="nav-link" href="/" Match="NavLinkMatch.All">
+                            <span class="oi oi-home nav-item-icon" aria-hidden="true"></span> <span class="navlink-text">Home</span>
                         </a>
                     </div>
                     <div class="nav-item px-3">
-                        <a class="nav-link" href="ShoppingLists">
-                            <span class="oi oi-list-rich" aria-hidden="true"></span> <span class="navlink-text">Shopping lists</span>
+                        <a class="nav-link" href="/ShoppingLists">
+                            <span class="oi oi-list-rich nav-item-icon" aria-hidden="true"></span> <span class="navlink-text">Shopping lists</span>
                         </a>
                     </div>
                     <div class="nav-item px-3">
-                        <a class="nav-link" href="User">
-                            <span class="oi oi-cog" aria-hidden="true"></span> <span class="navlink-text">User management</span>
+                        <a class="nav-link" href="/User">
+                            <span class="oi oi-cog nav-item-icon" aria-hidden="true"></span> <span class="navlink-text">User management</span>
                         </a>
                     </div>
                     <partial name="_LoginPartial" />
@@ -58,11 +59,9 @@
             </div>
 
             <div class="bottom-row ps-3 navbar navbar-dark">
-                <div class="container-fluid">
-                    <button id="navbar-toggler-lg" class="navbar-toggler navbar-toggler-lg" type="button" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
+                <button id="navbar-toggler-lg" class="navbar-toggler navbar-toggler-lg" type="button" aria-label="Toggle navigation" onclick="toggleNav()">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </div>
         </div>
 
@@ -70,18 +69,12 @@
             <article class="content px-4">
                 @RenderBody()
             </article>
-            @*<footer class="footer border-top pl-3 text-muted">
-                <div class="container">
-                    &copy; 2021 - Zdk.Server
-                </div>
-            </footer>*@
         </main>
     </div>
 
     <environment include="Development">
         <script src="~/Identity/lib/jquery/dist/jquery.js"></script>
         <script src="~/Identity/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-        <script src="~/Identity/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
@@ -96,18 +89,17 @@
                 crossorigin="anonymous"
                 integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj">
         </script>
-        <script src="~/Identity/js/site.js" asp-append-version="true"></script>
     </environment>
 
-    <script>
+    @*<script>
         const btn = document.getElementById("navbar-toggler-lg");
+        const brandName = document.getElementById("brand-name");
         const navbar = document.getElementById("navbar");
 
-        navbar.style.width = "250px";
         btn.onclick = toggleNav;
 
         function toggleNav(t, ev) {
-            if (navbar.style.width === "250px") {
+            if (navbar.style.width === "250px" || navbar.style.width === undefined || navbar.style.width === "") {
                 closeNav();
 
             } else {
@@ -117,22 +109,40 @@
 
         function openNav() {
             navbar.style.width = "250px";
+            navbar.style.paddingLeft = "18";
+            brandName.classList.remove("sidebar-center");
             let texts = document.getElementsByClassName("navlink-text");
+            let icons = document.getElementsByClassName("nav-item-icon");
 
-            for (let i = 0; i < texts.length; i++) {
-                texts[i].style.display = "flex";
+            for (let i = 0; i < icons.length; i++) {
+                icons[i].classList.remove("nav-item-icon-lg");
+                icons[i].classList.remove("sidebar-center");
             }
+
+            setTimeout(function() {
+                for (let i = 0; i < texts.length; i++) {
+                    texts[i].style.display = "flex";
+                }
+            }, 300);
         }
 
         function closeNav() {
-            navbar.style.width = "120px";
+            navbar.style.width = "90px";
+            navbar.style.paddingLeft = "0 !important";
+            brandName.classList.add("sidebar-center");
             let texts = document.getElementsByClassName("navlink-text");
+            let icons = document.getElementsByClassName("nav-item-icon");
 
             for (let i = 0; i < texts.length; i++) {
                 texts[i].style.display = "none";
             }
+
+            for (let i = 0; i < icons.length; i++) {
+                icons[i].classList.add("nav-item-icon-lg");
+                icons[i].classList.add("sidebar-center");
+            }
         }
-    </script>
+    </script>*@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
