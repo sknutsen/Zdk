@@ -29,7 +29,7 @@ public class ShoppingListsHub : Hub
         this.logger = logger;
     }
 
-    public async Task ListShoppingLists()
+    public async Task ListShoppingListsByCurrentGroup()
     {
         int groupId = await GetGroupId();
         
@@ -57,7 +57,7 @@ public class ShoppingListsHub : Hub
         if (addedList is null)
         {
             logger.LogWarning("failed adding new list");
-            await ListShoppingLists();
+            await ListShoppingListsByCurrentGroup();
             return;
         }
 
@@ -84,7 +84,7 @@ public class ShoppingListsHub : Hub
 
         logger.LogInformation($"Item posted with userid: {item.PostedBy}");
 
-        await ListShoppingLists();
+        await ListShoppingListsByCurrentGroup();
     }
 
     public async Task UpdateShoppingList(ShoppingList shoppingList)
@@ -93,7 +93,7 @@ public class ShoppingListsHub : Hub
 
         await shoppingListHandler.Update(shoppingList);
 
-        await ListShoppingLists();
+        await ListShoppingListsByCurrentGroup();
     }
 
     public async Task UpdateItem(Item item)
@@ -102,26 +102,26 @@ public class ShoppingListsHub : Hub
 
         await itemHandler.Update(item);
 
-        await ListShoppingLists();
+        await ListShoppingListsByCurrentGroup();
     }
 
     public async Task DeleteShoppingList(ShoppingList shoppingList)
     {
         await shoppingListHandler.Delete(shoppingList);
 
-        await ListShoppingLists();
+        await ListShoppingListsByCurrentGroup();
     }
 
     public async Task DeleteItem(Item item)
     {
         await itemHandler.Delete(item);
 
-        await ListShoppingLists();
+        await ListShoppingListsByCurrentGroup();
     }
 
     public override async Task OnConnectedAsync()
     {
-        await ListShoppingLists();
+        await ListShoppingListsByCurrentGroup();
 
         await base.OnConnectedAsync();
     }
