@@ -47,6 +47,8 @@ public class UserSessionHandler : HandlerBase<UserSessionHandler, DataContext>
             }
         }
 
+        logger.LogInformation($"userId: {userId} -- session userid: {session.UserId} -- groupId: {session.GroupId} -- isAdmin: {session.IsAdmin}");
+
         return session;
     }
 

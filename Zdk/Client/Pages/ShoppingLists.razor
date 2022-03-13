@@ -92,15 +92,10 @@ else
 
             userHubConnection.On<UserSession>(UserManagementHubMethodNames.GetUserSession, async (s) =>
             {
-                if (session is not null)
-                {
-                    await JoinClientGroup();
-                }
-
                 session = s;
+                await JoinClientGroup();
 
                 await GetLists();
-                Console.WriteLine($"Recieved session");
 
                 StateHasChanged();
             });

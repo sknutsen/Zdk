@@ -27,7 +27,7 @@ builder.Host.ConfigureLogging(logging =>
 
 string vaultUri = builder.Configuration["VaultUri"];
 
-bool isDev = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+bool isDev = builder.Environment.IsDevelopment();
 
 builder.Host.ConfigureAppConfiguration((context, config) =>
 {
@@ -163,7 +163,7 @@ WebApplication app = builder.Build();
 app.UseResponseCompression();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (isDev)
 {
     app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
