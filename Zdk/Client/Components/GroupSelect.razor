@@ -1,4 +1,8 @@
-﻿<div style="display: inline-flex;">
+﻿@namespace Zdk.Client
+
+@inherits ZComponentBase
+
+<div style="display: inline-flex;">
     <label style="margin: 10px;">
         Group: 
         <select style="min-width: 200px; height: 30px;" @onchange="@((e) => OnChanged.InvokeAsync(e.Value))">

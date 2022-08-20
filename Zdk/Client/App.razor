@@ -1,4 +1,6 @@
-﻿<CascadingAuthenticationState>
+﻿@namespace Zdk.Client
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">

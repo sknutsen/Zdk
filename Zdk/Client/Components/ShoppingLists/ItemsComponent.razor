@@ -1,4 +1,8 @@
-﻿<TableComponent Items="items">
+﻿@namespace Zdk.Client
+
+@inherits ZComponentBase
+
+<TableComponent Items="items">
     <TableHeader>
         <th style="text-align: left;">Name</th>
         <th style="width: 10%;">Qty</th>
@@ -9,7 +13,7 @@
         <td style="text-align: left;">@context.ItemName</td>
         <td style="width: 10%;">@context.Amount</td>
         <td style="width: 10%;">
-            <button @onclick="(() => Delete(context))">Delete</button>
+            <button type="button" @onclick="(() => Delete(context))">Delete</button>
         </td>
         <td style="width: 10%;">
             <input type="checkbox" value="@context.SoldOut" checked="@(context.SoldOut == true)" @onchange="(() => ToggleSoldOut(context))" />

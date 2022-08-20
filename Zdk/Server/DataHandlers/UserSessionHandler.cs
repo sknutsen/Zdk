@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Zdk.Server.Data;
-using Zdk.Server.DataHandlers.Base;
 using Zdk.Shared.Models;
 using Zdk.Utilities.Authentication.Data;
 

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Zdk.Server.Data;
-using Zdk.Server.DataHandlers.Base;
 using Zdk.Utilities.Authentication.Data;
 
 namespace Zdk.Server.DataHandlers;

@@ -19,10 +19,11 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureLogging(logging =>
 {
     //logging.ClearProviders();
-    logging.AddEventLog();
+    // logging.AddEventLog();
     logging.AddConsole();
     logging.AddDebug();
     logging.AddAzureWebAppDiagnostics();
+    logging.AddEventSourceLogger();
 });
 
 string vaultUri = builder.Configuration["VaultUri"];
@@ -71,47 +72,47 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 builder.Services.AddDefaultIdentity<ZdkUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<AuthContext>()
-    .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<AuthContext>()
+                .AddDefaultTokenProviders();
 
 builder.Services.AddOpenIddict()
-    .AddCore(options =>
-    {
-        options.UseEntityFrameworkCore().UseDbContext<AuthContext>();
-    })
-    .AddServer(options =>
-    {
-        // Enable the authorization, logout, token and userinfo endpoints.
-        options.SetAuthorizationEndpointUris("/connect/authorize")
-            .SetLogoutEndpointUris("/connect/logout")
-            .SetTokenEndpointUris("/connect/token")
-            .SetUserinfoEndpointUris("/connect/userinfo");
+                .AddCore(options =>
+                {
+                    options.UseEntityFrameworkCore().UseDbContext<AuthContext>();
+                })
+                .AddServer(options =>
+                {
+                    // Enable the authorization, logout, token and userinfo endpoints.
+                    options.SetAuthorizationEndpointUris("/connect/authorize")
+                           .SetLogoutEndpointUris("/connect/logout")
+                           .SetTokenEndpointUris("/connect/token")
+                           .SetUserinfoEndpointUris("/connect/userinfo");
 
-        // Mark the "email", "profile" and "roles" scopes as supported scopes.
-        options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
+                    // Mark the "email", "profile" and "roles" scopes as supported scopes.
+                    options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
-        // Note: the sample uses the code and refresh token flows but you can enable
-        // the other flows if you need to support implicit, password or client credentials.
-        options.AllowAuthorizationCodeFlow()
-            .AllowRefreshTokenFlow();
+                    // Note: the sample uses the code and refresh token flows but you can enable
+                    // the other flows if you need to support implicit, password or client credentials.
+                    options.AllowAuthorizationCodeFlow()
+                           .AllowRefreshTokenFlow();
 
-        // Register the signing and encryption credentials.
-        options.AddEncryptionCertificate(certificateWithPrivateKey)
-            .AddSigningCertificate(certificateWithPrivateKey);
+                    // Register the signing and encryption credentials.
+                    options.AddEncryptionCertificate(certificateWithPrivateKey)
+                           .AddSigningCertificate(certificateWithPrivateKey);
 
-        // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
-        options.UseAspNetCore()
-            .EnableAuthorizationEndpointPassthrough()
-            .EnableLogoutEndpointPassthrough()
-            .EnableStatusCodePagesIntegration()
-            .EnableTokenEndpointPassthrough();
-    })
-    .AddValidation(options =>
-    {
-        options.UseLocalServer();
+                    // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                    options.UseAspNetCore()
+                           .EnableAuthorizationEndpointPassthrough()
+                           .EnableLogoutEndpointPassthrough()
+                           .EnableStatusCodePagesIntegration()
+                           .EnableTokenEndpointPassthrough();
+                })
+                .AddValidation(options =>
+                {
+                    options.UseLocalServer();
 
-        options.UseAspNetCore();
-    });
+                    options.UseAspNetCore();
+                });
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();

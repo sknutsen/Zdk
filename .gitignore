@@ -358,3 +358,7 @@ Zdk/Server/appsettings.Development.json
 Zdk/Server/nuget.config
 
 out/
+
+*.DotSettings
+
+.idea/

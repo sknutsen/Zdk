@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Zdk.Shared.Models.Base;
+namespace Zdk.Shared.Models;
 
 public abstract class EntityBase
 {

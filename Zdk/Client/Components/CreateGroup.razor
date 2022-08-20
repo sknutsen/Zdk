@@ -1,4 +1,8 @@
-﻿<div style="display: inline-flex;">
+﻿@namespace Zdk.Client
+
+@inherits ZComponentBase
+
+<div style="display: inline-flex;">
     <form id="groupForm" @onsubmit="@(e => { OnSubmit.InvokeAsync(name); name = ""; })" style="margin: 10px;">
         <input form="groupForm" style="min-width: 200px; height: 30px;" @bind="name" />
         <button form="groupForm" style="height: 30px;" type="submit">Create</button>

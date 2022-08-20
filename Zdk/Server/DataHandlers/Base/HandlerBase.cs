@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Zdk.Server.Data;
 
-namespace Zdk.Server.DataHandlers.Base;
+namespace Zdk.Server.DataHandlers;
 
 public abstract class HandlerBase<Handler, Context> 
     where Context : DbContext

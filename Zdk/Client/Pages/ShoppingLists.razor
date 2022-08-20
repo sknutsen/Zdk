@@ -1,11 +1,16 @@
 ﻿@page "/ShoppingLists"
+
+@namespace Zdk.Client
+
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Microsoft.AspNetCore.SignalR.Client
 @inject HttpClient Http
-@inject NavigationManager NavigationManager
+@* @inject AuthenticationStateProvider AuthenticationStateProvider *@
+@* @inject NavigationManager NavigationManager *@
+
 @implements IAsyncDisposable
-@attribute [Authorize]
+@inherits AuthenticatedBase
 
 <h3 @onclick="() => shoppingList = null">Shopping lists</h3>
 
@@ -70,7 +75,7 @@ else
                 {
                     shoppingList = shoppingLists.Find(e => e.ShoppingListId == shoppingList.ShoppingListId) ?? null;
                 }
-                Console.WriteLine($"Recieved lists");
+                Console.WriteLine($"Received lists");
 
                 StateHasChanged();
             });
@@ -85,7 +90,7 @@ else
             userHubConnection.On<List<Group>>(UserManagementHubMethodNames.GetGroups, (list) =>
             {
                 groups = list;
-                Console.WriteLine($"Recieved groups");
+                Console.WriteLine($"Received groups");
 
                 StateHasChanged();
             });
