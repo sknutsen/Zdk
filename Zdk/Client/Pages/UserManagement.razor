@@ -2,22 +2,22 @@
 
 @namespace Zdk.Client
 
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@using Microsoft.AspNetCore.SignalR.Client
-@inject HttpClient Http
-@inject NavigationManager NavigationManager
+@inherits AuthenticatedBase
+
 @implements IAsyncDisposable
+
 @attribute [Authorize]
+
+@inject HttpClient Http
 
 @if (groups is not null && session is not null && groupMemberships is not null && users is not null)
 {
     <div>
         <CreateGroup OnSubmit="CreateGroup" />
-        <GroupSelect Groups="groups" @bind-Group="sessionGroup" OnChanged="ChangeGroup" />
+        <GroupSelect Groups="groups" @bind-Group="SessionGroup" OnChanged="ChangeGroup" />
     </div>
     <div>
-        <UsersComponent Users="users" GroupMemberships="groupMemberships" GroupId="sessionGroup" Add="AddUser" Remove="RemoveUser" />
+        <UsersComponent Users="users" GroupMemberships="groupMemberships" GroupId="SessionGroup" Add="AddUser" Remove="RemoveUser" />
     </div>
 }
 else
@@ -58,13 +58,10 @@ else
     private HubConnection? shoppingListHubConnection;
     private HubConnection? userHubConnection;
 
-    private int sessionGroup
+    private int SessionGroup
     {
         get => session.GroupId;
-        set 
-        {
-            session.GroupId = value;
-        }
+        set => session.GroupId = value;
     }
 
     public bool IsConnectedSL =>
@@ -208,7 +205,7 @@ else
         {
             await shoppingListHubConnection.SendAsync(ClientGroupMethodNames.JoinGroup);
         }
-        
+
         if (userHubConnection is not null)
         {
             await userHubConnection.SendAsync(ClientGroupMethodNames.JoinGroup);
@@ -235,5 +232,4 @@ else
             await userHubConnection.DisposeAsync();
         }
     }
-
 }

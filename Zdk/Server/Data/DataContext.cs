@@ -10,14 +10,16 @@ public class DataContext : DbContext
     public DbSet<ShoppingList> ShoppingLists { get; set; }
     public DbSet<GroupMembership> GroupMemberships { get; set; }
     public DbSet<UserSession> UserSessions { get; set; }
- 
-    public DataContext(DbContextOptions<DataContext> options) 
+
+    public DataContext(DbContextOptions<DataContext> options)
         : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        base.OnModelCreating(builder);
+
         //builder.Entity<ShoppingList>()
         //    .HasMany(e => e.Items)
         //    .WithOne()
@@ -47,7 +49,5 @@ public class DataContext : DbContext
         //    .WithMany(e => e.Items)
         //    .HasForeignKey(e => e.ShoppingListId)
         //    .OnDelete(DeleteBehavior.Cascade);
-        
-        base.OnModelCreating(builder);
     }
 }

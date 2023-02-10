@@ -1,13 +1,17 @@
 ﻿namespace Zdk.Shared.Constants;
 
-public class ClientGroupMethodNames
+public static class ClientGroupMethodNames
 {
+    public const string HubName = "";
+
     public const string JoinGroup = "JoinGroup";
     public const string LeaveGroup = "LeaveGroup";
 }
 
-public class MainHubMethodNames
+public static class MainHubMethodNames
 {
+    public const string HubName = "mainhub";
+
     public const string ReceiveMessage = "ReceiveMessage";
     public const string SendMessage = "SendMessage";
 
@@ -15,8 +19,10 @@ public class MainHubMethodNames
     public const string SendData = "SendData";
 }
 
-public class ShoppingListsHubMethodNames
+public static class ShoppingListsHubMethodNames
 {
+    public const string HubName = "shoppinglistshub";
+
     public const string ReceiveData = "ReceiveData";
     public const string ListShoppingLists = "ListShoppingLists";
 
@@ -33,8 +39,10 @@ public class ShoppingListsHubMethodNames
     public const string DeleteItem = "DeleteItem";
 }
 
-public class UserManagementHubMethodNames
+public static class UserManagementHubMethodNames
 {
+    public const string HubName = "userhub";
+
     public const string GetGroupMemberships = "GetGroupMemberships";
 
     public const string GetGroups   = "GetGroups";

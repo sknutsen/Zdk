@@ -13,10 +13,13 @@
         <td style="text-align: left;">@context.ItemName</td>
         <td style="width: 10%;">@context.Amount</td>
         <td style="width: 10%;">
-            <button type="button" @onclick="(() => Delete(context))">Delete</button>
+            <button type="button" @onclick="(() => Delete(context))">
+                Delete
+            </button>
         </td>
         <td style="width: 10%;">
-            <input type="checkbox" value="@context.SoldOut" checked="@(context.SoldOut == true)" @onchange="(() => ToggleSoldOut(context))" />
+            <input type="checkbox" value="@context.SoldOut" checked="@(context.SoldOut)"
+                @onchange="(() => ToggleSoldOut(context))" />
         </td>
     </RowTemplate>
     <TableFooter>
@@ -24,56 +27,15 @@
             <input form="itemForm" style="width:100%;" @bind="newItem.ItemName" maxlength="200" />
         </td>
         <td style="width: 10%;">
-            <input type="number" form="itemForm" style="width: 50px; text-align: right;" @bind="newItem.Amount" min="1" />
+            <input type="number" form="itemForm" style="width: 50px; text-align: right;" @bind="newItem.Amount"
+                min="1" />
         </td>
         <td style="width: 10%;">
-            <button type="submit" form="itemForm">Add</button>
+            <button type="submit" form="itemForm">
+                Add
+            </button>
         </td>
     </TableFooter>
 </TableComponent>
-<form id="itemForm" @onsubmit="OnSubmit" />
-
-@code {
-    [Parameter]
-    public ShoppingList? ShoppingList { get; set; }
-
-    [Parameter]
-    public EventCallback<ShoppingList?> ShoppingListChanged { get; set; }
-
-    private ShoppingList? shoppingList
-    {
-        get => ShoppingList;
-        set => ShoppingListChanged.InvokeAsync(value);
-    }
-
-    [Parameter]
-    public Item NewItem { get; set; }
-
-    [Parameter]
-    public EventCallback<Item> NewItemChanged { get; set; }
-
-    private Item newItem
-    {
-        get => NewItem;
-        set => NewItemChanged.InvokeAsync(value);
-    }
-
-    [Parameter]
-    public Func<Item, Task> Update { get; set; }
-
-    [Parameter]
-    public Func<Item, Task> Delete { get; set; }
-
-    [Parameter]
-    public EventCallback<EventArgs> OnSubmit { get; set; }
-
-    private IReadOnlyList<Item> items => ShoppingList?.Items?.ToList() ?? new List<Item>();
-
-    private async Task ToggleSoldOut(Item item)
-    {
-        item.SoldOut = !item.SoldOut;
-
-        await Update(item);
-    }
-
-}
+<form id="itemForm" @onsubmit="OnSubmit">
+</form>

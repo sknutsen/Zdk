@@ -7,10 +7,10 @@ public abstract class AuthenticatedBase : ZComponentBase
 {
     [CascadingParameter]
     public AuthenticationState AuthenticationState { get; set; }
-    
+
     [Inject]
     protected AuthenticationStateProvider AuthenticationStateProvider { get; set; }
-    
+
     [Inject]
     protected NavigationManager NavigationManager { get; set; }
 
@@ -21,14 +21,14 @@ public abstract class AuthenticatedBase : ZComponentBase
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        
+
         // AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateProvider_OnAuthenticationStateChanged;
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        
+
         AuthenticationStateProvider.AuthenticationStateChanged += AuthenticationStateProvider_OnAuthenticationStateChanged;
     }
 
@@ -38,7 +38,7 @@ public abstract class AuthenticatedBase : ZComponentBase
 
     protected virtual bool IsAuthenticated()
     {
-        return AuthenticationState.User.Identity?.IsAuthenticated ?? false;
+        return AuthenticationState?.User?.Identity?.IsAuthenticated ?? false;
     }
 
     protected virtual async Task<AuthenticationState> GetAuthenticationState()

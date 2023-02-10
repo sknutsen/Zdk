@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Zdk.Client;
 
 public abstract class ZComponentBase : ComponentBase
 {
+    [CascadingParameter]
+    public Task<AuthenticationState>? _currentAuthenticationStateTask { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -51,7 +55,7 @@ public abstract class ZComponentBase : ComponentBase
 
     protected virtual void OnFirstRender()
     {
-        
+
     }
 
     protected virtual async Task OnFirstRenderAsync()

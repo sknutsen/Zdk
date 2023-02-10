@@ -1,11 +1,10 @@
-﻿@namespace Zdk.Client
+﻿@page "/authentication/{action}"
 
-@page "/authentication/{action}"
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@namespace Zdk.Client
 
-<AuthenticatorView Action="@Action" />
+<RemoteAuthenticatorView Action="@Action" />
 
-@code{
-    [Parameter] 
+@code {
+    [Parameter]
     public string Action { get; set; }
 }

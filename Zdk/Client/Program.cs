@@ -10,8 +10,8 @@ builder.RootComponents.Add<App>("#app");
 var baseUri = builder.HostEnvironment.BaseAddress;
 
 builder.Services.AddHttpClient("Zdk.ServerAPI")
-    .ConfigureHttpClient(client => client.BaseAddress = new Uri(baseUri))
-    .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+                .ConfigureHttpClient(client => client.BaseAddress = new Uri(baseUri))
+                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(provider =>
@@ -20,16 +20,18 @@ builder.Services.AddScoped(provider =>
     return factory.CreateClient("Zdk.ServerAPI");
 });
 
+builder.Services.AddOptions();
 builder.Services.AddOidcAuthentication(options =>
 {
     options.ProviderOptions.ClientId = "Zdk.Client";
     options.ProviderOptions.Authority = baseUri;
-    options.ProviderOptions.ResponseType = "code";
-    options.AuthenticationPaths.LogInCallbackPath = $"{baseUri}authentication/login-callback";
-    options.AuthenticationPaths.LogOutCallbackPath = $"{baseUri}authentication/logout-callback";
     options.ProviderOptions.RedirectUri = $"{baseUri}authentication/login-callback";
     options.ProviderOptions.ResponseMode = "query";
-    options.AuthenticationPaths.RemoteRegisterPath = $"{baseUri}Identity/Account/Register";
+    options.ProviderOptions.ResponseType = "code";
+
+    options.AuthenticationPaths.LogInCallbackPath = $"{baseUri}authentication/login-callback";
+    options.AuthenticationPaths.LogOutCallbackPath = $"{baseUri}authentication/logout-callback";
+    // options.AuthenticationPaths.RemoteRegisterPath = $"{baseUri}Identity/Account/Register";
 });
 
 await builder.Build().RunAsync();
