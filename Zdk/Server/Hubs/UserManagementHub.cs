@@ -8,10 +8,9 @@ public partial class UserManagementHub : BaseHub<UserManagementHub>
 {
     private readonly UserHandler userHandler;
 
-    public UserManagementHub(GroupHandler groupHandler, GroupMembershipHandler groupMembershipHandler, UserHandler userHandler, UserSessionHandler userSessionHandler, ILogger<UserManagementHub> logger)
-        : base(groupHandler, groupMembershipHandler, userSessionHandler, logger)
+    public UserManagementHub(IServiceProvider services) : base(services)
     {
-        this.userHandler = userHandler;
+        userHandler = services.GetRequiredService<UserHandler>();
     }
 
     public override async Task OnConnectedAsync()

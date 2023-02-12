@@ -2,6 +2,8 @@
 
 @inherits ZComponentBase
 
+@inject UserRepo UserRepo
+
 <table style="width: 100%; max-height: 80vh; margin: auto;">
     <tbody>
         @foreach (var u in Users)
@@ -11,11 +13,11 @@
                 <td>
                     @if (InGroup(u.Id))
                     {
-                        <button @onclick="() => Remove(u)">Remove</button>
+                        <button @onclick="() => UserRepo.RemoveUser(u)">Remove</button>
                     }
                     else
                     {
-                        <button @onclick="() => Add(u)">Add</button>
+                        <button @onclick="() => UserRepo.AddUser(u)">Add</button>
                     }
                 </td>
             </tr>

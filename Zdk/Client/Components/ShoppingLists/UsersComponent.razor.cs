@@ -14,12 +14,6 @@ namespace Zdk.Client
         [Parameter]
         public int GroupId { get; set; }
 
-        [Parameter]
-        public Func<UserContainer, Task>? Add { get; set; }
-
-        [Parameter]
-        public Func<UserContainer, Task>? Remove { get; set; }
-
         private bool InGroup(string id)
         {
             return GroupMemberships.Any(e => e.UserId == id && e.GroupId == GroupId);

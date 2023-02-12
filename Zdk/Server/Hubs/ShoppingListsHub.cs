@@ -9,11 +9,10 @@ public partial class ShoppingListsHub : BaseHub<ShoppingListsHub>
     private readonly ItemHandler itemHandler;
     private readonly ShoppingListHandler shoppingListHandler;
 
-    public ShoppingListsHub(ItemHandler itemHandler, ShoppingListHandler shoppingListHandler, GroupHandler groupHandler, GroupMembershipHandler groupMembershipHandler, UserSessionHandler userSessionHandler, ILogger<ShoppingListsHub> logger)
-        : base(groupHandler, groupMembershipHandler, userSessionHandler, logger)
+    public ShoppingListsHub(IServiceProvider services) : base(services)
     {
-        this.itemHandler = itemHandler;
-        this.shoppingListHandler = shoppingListHandler;
+        itemHandler = services.GetRequiredService<ItemHandler>();
+        shoppingListHandler = services.GetRequiredService<ShoppingListHandler>();
     }
 
     public override async Task OnConnectedAsync()

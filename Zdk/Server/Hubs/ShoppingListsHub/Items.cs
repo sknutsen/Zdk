@@ -1,8 +1,10 @@
-﻿using Zdk.Shared.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Zdk.Shared.Models;
 
 namespace Zdk.Server.Hubs;
 
-public partial class ShoppingListsHub
+[Authorize]
+public partial class ShoppingListsHub : BaseHub<ShoppingListsHub>
 {
     public async Task SendItem(Item item)
     {

@@ -5,15 +5,15 @@ namespace Zdk.Client
     public partial class TableComponent<TItem> : ZComponentBase
     {
         [Parameter]
-        public RenderFragment? TableHeader { get; set; }
+        public RenderFragment TableHeader { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem>? RowTemplate { get; set; }
+        public RenderFragment<TItem> RowTemplate { get; set; }
 
         [Parameter]
-        public RenderFragment? TableFooter { get; set; }
+        public RenderFragment TableFooter { get; set; }
 
         [Parameter]
-        public IReadOnlyList<TItem>? Items { get; set; }
+        public IList<TItem> Items { get; set; }
     }
 }

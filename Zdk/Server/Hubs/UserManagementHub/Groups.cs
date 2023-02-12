@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Zdk.Shared.Constants;
 using Zdk.Shared.Models;
 
 namespace Zdk.Server.Hubs;
 
-public partial class UserManagementHub
+[Authorize]
+public partial class UserManagementHub : BaseHub<UserManagementHub>
 {
     public async Task GetGroups()
     {

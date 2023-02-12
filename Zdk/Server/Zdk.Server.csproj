@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5a1d3a69-0c7c-48e9-af25-f6f30de3d995</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,12 +18,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.2" />
-    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.5" />
-    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.6.2" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.4.0" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.13" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -32,8 +31,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
-    <PackageReference Include="OpenIddict.AspNetCore" Version="3.1.1" />
-	<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="4.0.0" />
+	<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.0.0" />
 	<PackageReference Include="Zdk.Utilities.Authentication" Version="0.0.1" />
   </ItemGroup>
 

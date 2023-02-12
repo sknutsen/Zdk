@@ -16,7 +16,7 @@
 
 @code {
     [Parameter]
-    public List<Group> Groups { get; set; } = new();
+    public IList<Group> Groups { get; set; } = new List<Group>();
 
     [Parameter]
     public int Group { get; set; }

@@ -17,4 +17,12 @@ public abstract partial class BaseHub<HubName> : Hub
         this.userSessionHandler = userSessionHandler;
         this.logger = logger;
     }
+
+    public BaseHub(IServiceProvider services) 
+    { 
+        groupHandler = services.GetRequiredService<GroupHandler>();
+        groupMembershipHandler = services.GetRequiredService<GroupMembershipHandler>();
+        userSessionHandler = services.GetRequiredService<UserSessionHandler>();
+        logger = services.GetRequiredService<ILogger<HubName>>();
+    }
 }

@@ -2,9 +2,7 @@ using Azure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Azure.KeyVault.Models;
+using Azure.Security.KeyVault;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
 using Zdk.Utilities.Authentication.Data;
@@ -13,6 +11,8 @@ using Zdk.Server.Data;
 using Zdk.Server.Hubs;
 using Zdk.Server.DataHandlers;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Security.KeyVault.Certificates;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -38,15 +38,16 @@ builder.Host.ConfigureAppConfiguration((context, config) =>
         config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
     }
 });
-
-AzureServiceTokenProvider azureServiceTokenProvider = new();
-KeyVaultClient client = new(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-
+DefaultAzureCredential cred = new DefaultAzureCredential();
+SecretClient client = new(new Uri(vaultUri), cred);
+CertificateClient certClient = new(new Uri(vaultUri), cred);
 string certName = builder.Configuration["Cert"];
-SecretBundle certificatePrivateKeySecretBundle = client.GetSecretAsync(vaultUri, certName).Result;
+KeyVaultSecret certificate = await client.GetSecretAsync(certName);
+//KeyVaultCertificateWithPolicy certificate = await certClient.GetCertificateAsync(certName);
 
-byte[] privateKeyBytes = Convert.FromBase64String(certificatePrivateKeySecretBundle.Value);
+byte[] privateKeyBytes = Convert.FromBase64String(certificate.Value);
 X509Certificate2 certificateWithPrivateKey = new(privateKeyBytes, (string)null, X509KeyStorageFlags.MachineKeySet);
+//X509Certificate2 certificateWithPrivateKey = new(certificate.Cer, (string)null, X509KeyStorageFlags.MachineKeySet);
 
 string zdkAuthConnectionString = builder.Configuration["ConnectionStrings:ZdkAuthDb"];
 string dataConnectionString = builder.Configuration["ConnectionStrings:DataDb"];

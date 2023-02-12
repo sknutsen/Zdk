@@ -2,7 +2,10 @@
 
 @inherits ZComponentBase
 
-<EditForm Model="newShoppingList" OnSubmit="OnSubmit" Context="formContext">
+@inject ShoppingListsRepo ShoppingListsRepo
+@inject UserRepo UserRepo
+
+<EditForm Model="NewShoppingList" OnSubmit="OnSubmit" Context="formContext">
     <TableComponent Items="ShoppingLists">
         <TableHeader>
             <th style="text-align: left;">Name</th>
@@ -13,7 +16,7 @@
                 @context.ShoppingListName
             </td>
             <td style="width: 10%;">
-                <button type="button" @onclick="() => Delete(context)">Delete</button>
+                <button type="button" @onclick="() => ShoppingListsRepo.DeleteList(context)">Delete</button>
             </td>
         </RowTemplate>
         <TableFooter>
@@ -26,4 +29,3 @@
         </TableFooter>
     </TableComponent>
 </EditForm>
-@* <form id="slForm" @onsubmit="OnSubmit" /> *@

@@ -3,12 +3,13 @@
 @namespace Zdk.Client
 
 @inherits AuthenticatedBase
-
 @implements IAsyncDisposable
 
 @attribute [Authorize]
 
 @inject HttpClient Http
+@inject ShoppingListsRepo ShoppingListsRepo
+@inject UserRepo UserRepo
 
 @if (groups is not null && session is not null && groupMemberships is not null && users is not null)
 {
@@ -17,7 +18,7 @@
         <GroupSelect Groups="groups" @bind-Group="SessionGroup" OnChanged="ChangeGroup" />
     </div>
     <div>
-        <UsersComponent Users="users" GroupMemberships="groupMemberships" GroupId="SessionGroup" Add="AddUser" Remove="RemoveUser" />
+        <UsersComponent Users="users" GroupMemberships="groupMemberships" GroupId="SessionGroup" />
     </div>
 }
 else
@@ -42,194 +43,5 @@ else
         <p>session loaded</p>
     }
 
-    if (userHubConnection is not null)
-    {
-        <p>hub loaded</p>
-    }
-
     <p>Loading...</p>
-}
-
-@code {
-    private List<Group> groups;
-    private List<GroupMembership> groupMemberships;
-    private List<UserContainer> users;
-    private UserSession session;
-    private HubConnection? shoppingListHubConnection;
-    private HubConnection? userHubConnection;
-
-    private int SessionGroup
-    {
-        get => session.GroupId;
-        set => session.GroupId = value;
-    }
-
-    public bool IsConnectedSL =>
-        shoppingListHubConnection?.State == HubConnectionState.Connected;
-
-    public bool IsConnectedU =>
-        userHubConnection?.State == HubConnectionState.Connected;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            shoppingListHubConnection = new HubConnectionBuilder()
-                .WithUrl(NavigationManager.ToAbsoluteUri("/shoppinglistshub"))
-                .WithAutomaticReconnect()
-                .Build();
-
-            await shoppingListHubConnection.StartAsync();
-
-            userHubConnection = new HubConnectionBuilder()
-                .WithUrl(NavigationManager.ToAbsoluteUri("/userhub"))
-                .WithAutomaticReconnect()
-                .Build();
-
-            userHubConnection.On<List<UserContainer>>(UserManagementHubMethodNames.GetUsers, (list) =>
-            {
-                users = list;
-
-                StateHasChanged();
-            });
-
-            userHubConnection.On<List<Group>>(UserManagementHubMethodNames.GetGroups, (list) =>
-            {
-                groups = list;
-
-                StateHasChanged();
-            });
-
-            userHubConnection.On<List<GroupMembership>>(UserManagementHubMethodNames.GetGroupMemberships, (list) =>
-            {
-                groupMemberships = list;
-
-                StateHasChanged();
-            });
-
-            userHubConnection.On<UserSession>(UserManagementHubMethodNames.GetUserSession, async (s) =>
-            {
-                session = s;
-                await JoinClientGroup();
-
-                StateHasChanged();
-            });
-
-            await userHubConnection.StartAsync();
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-        catch (HttpRequestException exception)
-        {
-            if (exception.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                NavigationManager.NavigateTo($"authentication/login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
-            }
-        }
-    }
-
-    private async Task ChangeGroup(object? value)
-    {
-        Console.WriteLine($"value is: {value} - type: {value.GetType()}");
-        await LeaveClientGroup();
-
-        session.GroupId = Int32.Parse((string)value);
-
-        await UpdateUserSession();
-    }
-
-    private async Task CreateGroup(string groupName)
-    {
-        Group group = new Group
-        {
-            GroupName = groupName,
-            Owner = session.UserId,
-        };
-
-        await NewGroup(group);
-    }
-
-    private async Task NewGroup(Group group)
-    {
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(UserManagementHubMethodNames.NewGroup, group);
-        }
-    }
-
-    private async Task UpdateGroup(Group group)
-    {
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(UserManagementHubMethodNames.UpdateGroup, group);
-        }
-    }
-
-    private async Task DeleteGroup(Group group)
-    {
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(UserManagementHubMethodNames.DeleteGroup, group);
-        }
-    }
-
-    private async Task AddUser(UserContainer user)
-    {
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(UserManagementHubMethodNames.AddUser, user);
-        }
-    }
-
-    private async Task RemoveUser(UserContainer user)
-    {
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(UserManagementHubMethodNames.RemoveUser, user);
-        }
-    }
-
-    private async Task UpdateUserSession()
-    {
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(UserManagementHubMethodNames.UpdateUserSession, session);
-        }
-    }
-
-    private async Task JoinClientGroup()
-    {
-        if (shoppingListHubConnection is not null)
-        {
-            await shoppingListHubConnection.SendAsync(ClientGroupMethodNames.JoinGroup);
-        }
-
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(ClientGroupMethodNames.JoinGroup);
-        }
-    }
-
-    private async Task LeaveClientGroup()
-    {
-        if (shoppingListHubConnection is not null)
-        {
-            await shoppingListHubConnection.SendAsync(ClientGroupMethodNames.LeaveGroup, session.GroupId);
-        }
-
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.SendAsync(ClientGroupMethodNames.LeaveGroup, session.GroupId);
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (userHubConnection is not null)
-        {
-            await userHubConnection.DisposeAsync();
-        }
-    }
 }

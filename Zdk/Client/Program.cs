@@ -20,6 +20,9 @@ builder.Services.AddScoped(provider =>
     return factory.CreateClient("Zdk.ServerAPI");
 });
 
+builder.Services.AddScoped<ShoppingListsRepo>();
+builder.Services.AddScoped<UserRepo>();
+
 builder.Services.AddOptions();
 builder.Services.AddOidcAuthentication(options =>
 {

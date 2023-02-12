@@ -2,6 +2,9 @@
 
 @inherits ZComponentBase
 
+@inject ShoppingListsRepo ShoppingListsRepo
+@inject UserRepo UserRepo
+
 <TableComponent Items="items">
     <TableHeader>
         <th style="text-align: left;">Name</th>
@@ -13,7 +16,7 @@
         <td style="text-align: left;">@context.ItemName</td>
         <td style="width: 10%;">@context.Amount</td>
         <td style="width: 10%;">
-            <button type="button" @onclick="(() => Delete(context))">
+            <button type="button" @onclick="(() => ShoppingListsRepo.DeleteItem(context))">
                 Delete
             </button>
         </td>
@@ -24,10 +27,10 @@
     </RowTemplate>
     <TableFooter>
         <td style="text-align: left;">
-            <input form="itemForm" style="width:100%;" @bind="newItem.ItemName" maxlength="200" />
+            <input form="itemForm" style="width:100%;" @bind="NewItem.ItemName" maxlength="200" />
         </td>
         <td style="width: 10%;">
-            <input type="number" form="itemForm" style="width: 50px; text-align: right;" @bind="newItem.Amount"
+            <input type="number" form="itemForm" style="width: 50px; text-align: right;" @bind="NewItem.Amount"
                 min="1" />
         </td>
         <td style="width: 10%;">
