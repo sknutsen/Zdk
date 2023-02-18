@@ -1,5 +1,3 @@
-@import "Components/_styles.scss";
-
-body {
-    background-color: black;
-}
+@import '../Components/_styles.scss';
+@import '../Pages/_styles.scss';
+@import '../Shared/_styles.scss';

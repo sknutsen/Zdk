@@ -82,6 +82,8 @@ public class ShoppingListsRepo : RepoBase, IAsyncDisposable
             {
                 await HubConnection!.SendAsync(ShoppingListsHubMethodNames.SendItem, item);
             }
+
+            itemsToSend.Clear();
         }
     }
 

@@ -85,8 +85,6 @@ public abstract class RepoBase : IAsyncDisposable
         }
     }
 
-    //protected async Task SendAsync(string hubMethodName, )
-
     public virtual async ValueTask DisposeAsync()
     {
         if (HubConnection is not null)
