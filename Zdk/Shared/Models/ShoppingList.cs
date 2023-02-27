@@ -29,5 +29,5 @@ public class ShoppingList : EntityBase
     [Column("posted_by", TypeName = "text")]
     public string PostedBy { get; set; }
 
-    public virtual ICollection<Item> Items { get; set; }
+    public virtual ICollection<ShoppingListItem> Items { get; set; }
 }

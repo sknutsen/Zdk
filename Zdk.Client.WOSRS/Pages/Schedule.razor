@@ -1,0 +1,111 @@
+﻿@page "/schedule"
+@namespace Zdk.Client.WOSRS
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+
+<h1>Schedule</h1>
+
+<br />
+
+@if (currentItem is not null)
+{
+    <CurrentItemComponent Item="currentItem" Click="CompleteTask" />
+}
+else
+{
+    <p>No task for today <button class="btn btn-primary" @onclick="NewTask">Get task</button></p>
+}
+
+<hr />
+
+<Scheduler ScheduledItems="@(scheduledItemsByYear ?? new List<YearlySchedule>())" />
+
+@code {
+    private ScheduledItemContainer currentItem;
+    private IEnumerable<ScheduledItemContainer> scheduledItems;
+    private IEnumerable<YearlySchedule> scheduledItemsByYear;
+    private IEnumerable<ItemContainer> items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await GetCurrent();
+            await GetList();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+
+    private async Task GetCurrent()
+    {
+        try
+        {
+            currentItem = await Http.GetFromJsonAsync<ScheduledItemContainer>("ScheduledItems/current");
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
+    private async Task GetList()
+    {
+        scheduledItems = await Http.GetFromJsonAsync<IEnumerable<ScheduledItemContainer>>("ScheduledItems/list");
+        var scheduledItemsByMonth = scheduledItems.GroupBy(e => new { e.Date.Month, e.Date.Year }).Select(e => new MonthlySchedule
+        {
+            Month = e.Key.Month,
+            Year = e.Key.Year,
+            ScheduledItems = e.ToList(),
+        }).ToList();
+        scheduledItemsByYear = scheduledItemsByMonth.GroupBy(e => e.Year).Select(e => new YearlySchedule
+        {
+            Year = e.Key,
+            ScheduledItems = e.ToList(),
+        }).ToList();
+        items = await Http.GetFromJsonAsync<IEnumerable<ItemContainer>>("Items/list");
+    }
+
+    private async Task NewTask()
+    {
+        Item item = ItemFunc.GetItem(items, scheduledItems, true); // replace true with setting
+
+        ScheduledItemContainer scheduledItem = new ScheduledItemContainer
+        {
+            Date = DateTime.Today,
+            ItemId = item.ItemId,
+            IsComplete = false,
+        };
+
+        var response = await Http.PostAsJsonAsync<ScheduledItemContainer>("ScheduledItems/new", scheduledItem);
+        await GetCurrent();
+        await GetList();
+    }
+
+    private async Task CompleteTask()
+    {
+        currentItem.IsComplete = true;
+
+        if (currentItem.Item == null)
+        {
+            var itemResponse = await Http.PostAsJsonAsync<ItemContainer>("Items/get", new ItemContainer { ItemId = currentItem.ItemId });
+
+            var content = await itemResponse.Content.ReadFromJsonAsync<ItemContainer>();
+
+            currentItem.Item = (Item)content.ToEntityClass();
+        }
+
+        var idResponse = await Http.GetAsync("Users/");
+
+        currentItem.Item.UserId = await idResponse.Content.ReadAsStringAsync();
+
+        var response = await Http.PostAsJsonAsync<ScheduledItemContainer>("ScheduledItems/update", currentItem);
+    }
+
+}

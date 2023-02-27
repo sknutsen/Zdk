@@ -1,0 +1,25 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<BaseContainerComponent>
+    <div style="display: inline; padding-top: 10px; padding-bottom: 10px; padding-right: 10px;" @onclick="Click">
+        <h6 style="display: inline;">@(Category?.CategoryName ?? "CategoryName")</h6>
+    </div>
+    <div class="dismiss-div" @onclick="Close">
+        <a class="dismiss">🗙</a>
+    </div>
+</BaseContainerComponent>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; } = new Dictionary<string, object>();
+
+    [Parameter]
+    public CategoryContainer Category { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> Click { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> Close { get; set; }
+
+}

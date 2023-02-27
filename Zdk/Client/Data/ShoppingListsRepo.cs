@@ -7,7 +7,7 @@ namespace Zdk.Client;
 public class ShoppingListsRepo : RepoBase, IAsyncDisposable
 {
     private List<ShoppingList> listsToSend = new List<ShoppingList>();
-    private List<Item> itemsToSend = new List<Item>();
+    private List<ShoppingListItem> itemsToSend = new List<ShoppingListItem>();
 
     public event Func<IList<ShoppingList>, Task> OnReceiveData;
 
@@ -67,7 +67,7 @@ public class ShoppingListsRepo : RepoBase, IAsyncDisposable
         }
     }
 
-    public async Task SendItem(Item newItem)
+    public async Task SendItem(ShoppingListItem newItem)
     {
         itemsToSend.Add(newItem);
 
@@ -92,7 +92,7 @@ public class ShoppingListsRepo : RepoBase, IAsyncDisposable
         await HubConnection!.SendAsync(ShoppingListsHubMethodNames.UpdateShoppingList, list);
     }
 
-    public async Task UpdateItem(Item item)
+    public async Task UpdateItem(ShoppingListItem item)
     {
         await HubConnection!.SendAsync(ShoppingListsHubMethodNames.UpdateItem, item);
     }
@@ -102,7 +102,7 @@ public class ShoppingListsRepo : RepoBase, IAsyncDisposable
         await HubConnection!.SendAsync(ShoppingListsHubMethodNames.DeleteShoppingList, list);
     }
 
-    public async Task DeleteItem(Item item)
+    public async Task DeleteItem(ShoppingListItem item)
     {
         await HubConnection!.SendAsync(ShoppingListsHubMethodNames.DeleteItem, item);
     }

@@ -1,0 +1,25 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<form id="category-form" @onsubmit="Func">
+    <label for="input">Name</label>
+    <input id="name-input" form="category-form" @bind="category.CategoryName" />
+    <input type="submit" form="category-form" />
+</form>
+
+@code {
+    [Parameter]
+    public CategoryContainer NewCategory { get; set; }
+
+    [Parameter]
+    public EventCallback<CategoryContainer> NewCategoryChanged { get; set; }
+
+    private CategoryContainer category
+    {
+        get => NewCategory;
+        set => NewCategoryChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public Func<Task> Func { get; set; }
+
+}

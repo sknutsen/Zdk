@@ -1,0 +1,51 @@
+﻿@namespace Zdk.Client.WOSRS
+
+@inject HttpClient Http
+
+<div style="background-color: var(--info); color: white; width: 100%; border: 1px solid black; border-radius: 5px; padding: 10px;">
+    <h5>@Item?.Item?.ItemName</h5>
+
+    <p>Created: @Item?.Date.ToDateText()</p>
+
+    @if (Item.IsComplete)
+    {
+        <p>Item is complete 🥳</p>
+    }
+    else
+    {
+        <p><button class="btn btn-primary" @onclick="Click">Complete</button></p>
+    }
+
+</div>
+
+@if (Item.Item?.ItemCategories != null && Item.Item?.ItemCategories.Count > 0)
+{
+    <h6>Categories</h6>
+    <div>
+        @foreach (var c in Item.Item?.ItemCategories)
+        {
+            <CategoryStaticComponent Category="new CategoryContainer(c.Category)" />
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public ScheduledItemContainer Item { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> Click { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Item != null)
+        {
+            var response = await Http.PostAsJsonAsync<ItemContainer>("Items/get", new ItemContainer { ItemId = Item.ItemId });
+
+            var content = await response.Content.ReadFromJsonAsync<ItemContainer>();
+
+            Item.Item = (Item)content.ToEntityClass();
+        }
+    }
+
+}

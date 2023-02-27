@@ -1,0 +1,85 @@
+﻿@namespace Zdk.Client.WOSRS
+
+@inject HttpClient Http
+
+<form id="item-form" @onsubmit="Func">
+    <label for="input">Name</label>
+    <input id="name-input" form="item-form" @bind="item.ItemName" />
+    <input type="submit" form="item-form" />
+</form>
+
+<br />
+<br />
+
+<h5>Categories</h5>
+<div>
+    @foreach (var cat in Categories)
+    {
+        <Checkbox @bind-Checked="SelectedCategories[cat.CategoryId]" Text="@cat.CategoryName" Click="() => ToggleCategory(cat)" />
+        @*<label>
+            <input type="checkbox" checked="@SelectedCategories[cat.CategoryId]" @onchange="() => ToggleCategory(cat)" />
+            @cat.CategoryName
+        </label>*@
+    }
+</div>
+
+@code {
+    [Parameter]
+    public ItemContainer SelectedItem { get; set; }
+
+    [Parameter]
+    public EventCallback<ItemContainer> SelectedItemChanged { get; set; }
+
+    private ItemContainer item
+    {
+        get => SelectedItem;
+        set => SelectedItemChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public Func<Task> Func { get; set; }
+
+    [Parameter]
+    public Func<CategoryContainer, Task> AddCategory { get; set; }
+
+    [Parameter]
+    public Func<CategoryContainer, Task> DeleteCategory { get; set; }
+
+    [Parameter]
+    public IEnumerable<CategoryContainer> Categories { get; set; }
+
+    private IDictionary<int, bool> SelectedCategories = new Dictionary<int, bool>();
+
+    protected override Task OnParametersSetAsync()
+    {
+        SelectedCategories = new Dictionary<int, bool>();
+
+        foreach (var cat in Categories)
+        {
+            int key = cat.CategoryId;
+            Console.WriteLine($"is null: {item.ItemCategories is null}");
+            bool value = item.ItemCategories.Any(e => e.CategoryId == key);
+
+            SelectedCategories.Add(key, value);
+        }
+
+        return base.OnParametersSetAsync();
+    }
+
+    private async Task ToggleCategory(CategoryContainer container)
+    {
+        bool oldValue = SelectedCategories[container.CategoryId];
+
+        SelectedCategories[container.CategoryId] = !oldValue;
+
+        if (SelectedCategories[container.CategoryId])
+        {
+            await AddCategory(container);
+        }
+        else
+        {
+            await DeleteCategory(container);
+        }
+    }
+
+}

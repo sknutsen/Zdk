@@ -1,0 +1,69 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<div>
+    @foreach (var i in ScheduledItems)
+    {
+        <div>
+            <div>
+                <h4>@i.Year</h4>
+            </div>
+
+            <div>
+                @foreach (var j in i.ScheduledItems)
+                {
+                    <div>
+                        <div>
+                            <h5>@GetMonthName(j.Month)</h5>
+                        </div>
+
+                        <div>
+                            @foreach (var k in j.ScheduledItems)
+                            {
+                                <ScheduledItemComponent ScheduledItem="k" />
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<YearlySchedule> ScheduledItems { get; set; }
+
+    private string GetMonthName(int month)
+    {
+        switch (month)
+        {
+            case 1:
+                return "Januar";
+            case 2:
+                return "Februar";
+            case 3:
+                return "Mars";
+            case 4:
+                return "April";
+            case 5:
+                return "Mai";
+            case 6:
+                return "Juni";
+            case 7:
+                return "Juli";
+            case 8:
+                return "August";
+            case 9:
+                return "September";
+            case 10:
+                return "Oktober";
+            case 11:
+                return "November";
+            case 12:
+                return "Desember";
+            default:
+                return "???";
+        }
+    }
+
+}

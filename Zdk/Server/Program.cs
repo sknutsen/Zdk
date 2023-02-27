@@ -7,19 +7,20 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
 using Zdk.Utilities.Authentication.Data;
 using Zdk.Server;
-using Zdk.Server.Data;
+using Zdk.DataAccess;
 using Zdk.Server.Hubs;
-using Zdk.Server.DataHandlers;
+using Zdk.Server.ShoppingLists;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Security.KeyVault.Certificates;
+using Zdk.Server.WOSRS;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureLogging(logging =>
 {
     //logging.ClearProviders();
-    // logging.AddEventLog();
+    //logging.AddEventLog();
     logging.AddConsole();
     logging.AddDebug();
     logging.AddAzureWebAppDiagnostics();
@@ -43,34 +44,41 @@ SecretClient client = new(new Uri(vaultUri), cred);
 CertificateClient certClient = new(new Uri(vaultUri), cred);
 string certName = builder.Configuration["Cert"];
 KeyVaultSecret certificate = await client.GetSecretAsync(certName);
-//KeyVaultCertificateWithPolicy certificate = await certClient.GetCertificateAsync(certName);
 
 byte[] privateKeyBytes = Convert.FromBase64String(certificate.Value);
 X509Certificate2 certificateWithPrivateKey = new(privateKeyBytes, (string)null, X509KeyStorageFlags.MachineKeySet);
-//X509Certificate2 certificateWithPrivateKey = new(certificate.Cer, (string)null, X509KeyStorageFlags.MachineKeySet);
 
 string zdkAuthConnectionString = builder.Configuration["ConnectionStrings:ZdkAuthDb"];
-string dataConnectionString = builder.Configuration["ConnectionStrings:DataDb"];
+string shoppingListConnectionString = builder.Configuration["ConnectionStrings:DataDb"];
+string wosrsConnectionString = builder.Configuration["ConnectionStrings:wosrsDb"];
 
 if (string.IsNullOrEmpty(zdkAuthConnectionString))
 {
     zdkAuthConnectionString = builder.Configuration["ZdkAuthDb"];
 }
-if (string.IsNullOrEmpty(dataConnectionString))
+
+if (string.IsNullOrEmpty(shoppingListConnectionString))
 {
-    dataConnectionString = builder.Configuration["DataDb"];
+    shoppingListConnectionString = builder.Configuration["DataDb"];
 }
+
+if (string.IsNullOrEmpty(wosrsConnectionString))
+{
+    wosrsConnectionString = builder.Configuration["wosrsDb"];
+}
+
+builder.Services.AddZdkDbContexts(shoppingListConnectionString, wosrsConnectionString);
 
 builder.Services.AddDbContext<AuthContext>(options => 
 {
-    options.UseNpgsql(zdkAuthConnectionString, o => o.SetPostgresVersion(new System.Version(9, 6)));
+    options.UseNpgsql(zdkAuthConnectionString, o => o.SetPostgresVersion(new Version(9, 6)));
     options.UseOpenIddict();
 });
 
-builder.Services.AddDbContext<DataContext>(options => 
-{
-    options.UseNpgsql(dataConnectionString, o => o.SetPostgresVersion(new System.Version(9, 6)));
-});
+//builder.Services.AddDbContext<ShoppingListContext>(options => 
+//{
+//    options.UseNpgsql(shoppingListConnectionString, o => o.SetPostgresVersion(new Version(9, 6)));
+//});
 
 builder.Services.AddDefaultIdentity<ZdkUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AuthContext>()
@@ -119,15 +127,17 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 builder.Services.AddSignalR();
+
+builder.Services.AddControllers()
+                .AddWOSRSApplicationPart()
+                .AddControllersAsServices();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddResponseCompression(opts =>
 {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
 });
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 
 builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
@@ -192,7 +202,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();
     endpoints.MapControllers();
     endpoints.MapHub<MainHub>("/mainhub");
-    endpoints.MapHub<ShoppingListsHub>("/shoppinglistshub");
+    endpoints.MapShoppingListHubs();
     endpoints.MapHub<UserManagementHub>("/userhub");
     endpoints.MapFallbackToFile("index.html");
 });

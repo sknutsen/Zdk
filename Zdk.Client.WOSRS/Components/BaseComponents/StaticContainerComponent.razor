@@ -1,0 +1,16 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<BaseContainerComponent IsStatic="true">
+    <div style="display: inline; min-width: 150px;">
+        <h6 style="display: inline;">@(Text ?? "ItemName")</h6>
+    </div>
+</BaseContainerComponent>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; } = new Dictionary<string, object>();
+
+    [Parameter]
+    public string Text { get; set; }
+
+}

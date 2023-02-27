@@ -1,0 +1,18 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<Radio TItem="bool" @bind-Selected="Value" Options="BooleanDefs.List" />
+
+@code {
+    [Parameter]
+    public bool Selected { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> SelectedChanged { get; set; }
+
+    private bool Value
+    {
+        get => Selected;
+        set => SelectedChanged.InvokeAsync(value);
+    }
+
+}

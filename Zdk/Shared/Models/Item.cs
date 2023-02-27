@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Zdk.Shared.Models;
 
 [Table("items")]
-public class Item : EntityBase
+public class Item : TimeStamped, IEntityClass
 {
     [Key]
     [Column("item_id")]
@@ -21,19 +17,10 @@ public class Item : EntityBase
     public string ItemName { get; set; }
 
     [Required]
-    [Column("amount")]
-    public int Amount { get; set; }
+    [ForeignKey("application_users")]
+    [Column("user_id")]
+    public string UserId { get; set; }
 
-    [Required]
-    [Column("sold_out")]
-    public bool SoldOut { get; set; }
-
-    [Required]
-    [ForeignKey("shopping_lists")]
-    [Column("shopping_list_id")]
-    public int ShoppingListId { get; set; }
-
-    [Required]
-    [Column("posted_by", TypeName = "text")]
-    public string PostedBy { get; set; }
+    public ICollection<ItemCategory> ItemCategories { get; set; }
+    public ICollection<ScheduledItem> ScheduledItems { get; set; }
 }

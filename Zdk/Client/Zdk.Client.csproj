@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Zdk.Client.ShoppingLists\Zdk.Client.ShoppingLists.csproj" />
+    <ProjectReference Include="..\..\Zdk.Client.Todo\Zdk.Client.Todo.csproj" />
+    <ProjectReference Include="..\..\Zdk.Client.WOSRS\Zdk.Client.WOSRS.csproj" />
     <ProjectReference Include="..\Shared\Zdk.Shared.csproj" />
   </ItemGroup>
 

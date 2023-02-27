@@ -1,0 +1,12 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<StaticContainerComponent Text="@Category.CategoryName" @attributes="InputAttributes" />
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> InputAttributes { get; set; } = new Dictionary<string, object>();
+
+    [Parameter]
+    public CategoryContainer Category { get; set; }
+
+}

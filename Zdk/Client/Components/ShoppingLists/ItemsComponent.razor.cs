@@ -8,11 +8,11 @@ namespace Zdk.Client
         [Parameter]
         public ShoppingList? ShoppingList { get; set; }
 
-        public Item NewItem { get; set; } = new Item();
+        public ShoppingListItem NewItem { get; set; } = new ShoppingListItem();
 
-        private IList<Item> items => ShoppingList?.Items?.ToList() ?? new List<Item>();
+        private IList<ShoppingListItem> items => ShoppingList?.Items?.ToList() ?? new List<ShoppingListItem>();
 
-        private async Task ToggleSoldOut(Item item)
+        private async Task ToggleSoldOut(ShoppingListItem item)
         {
             item.SoldOut = !item.SoldOut;
             await ShoppingListsRepo.UpdateItem(item);
@@ -22,7 +22,7 @@ namespace Zdk.Client
         {
             await ShoppingListsRepo.SendItem(NewItem);
 
-            NewItem = new Item()
+            NewItem = new ShoppingListItem()
             {
                 Amount = 1,
             };

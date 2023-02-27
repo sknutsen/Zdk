@@ -1,0 +1,18 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<Radio TItem="int" @bind-Selected="Value" Options="ItemOrderDefs.List" />
+
+@code {
+    [Parameter]
+    public int Selected { get; set; }
+
+    [Parameter]
+    public EventCallback<int> SelectedChanged { get; set; }
+
+    private int Value
+    {
+        get => Selected;
+        set => SelectedChanged.InvokeAsync(value);
+    }
+
+}

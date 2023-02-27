@@ -1,0 +1,169 @@
+﻿@page "/items"
+@namespace Zdk.Client.WOSRS
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+
+@if (Editing)
+{
+    <h3>
+        Editing 
+        <button class="btn btn-primary" @onclick="() => Editing = false">Go back</button>
+    </h3>
+
+    <hr />
+
+    <ItemEditor @bind-SelectedItem="selectedItem" AddCategory="AddItemCategory" DeleteCategory="DeleteItemCategory" Func="UpdateItem" Categories="categories" />
+}
+else if (Creating)
+{
+    <h3>
+        Creating 
+        <button class="btn btn-primary" @onclick="() => Creating = false">Go back</button>
+    </h3>
+
+    <hr />
+
+    <ItemCreator @bind-NewItem="item" Func="AddItem" />
+}
+else
+{
+    <h3>
+        Items 
+        <button class="btn btn-primary" @onclick="() => Creating = true">Create</button>
+    </h3>
+
+    <hr />
+    
+    @foreach (var i in items)
+    {
+        <ItemComponent Item="i" Click="(e) => Select(i)" Close="(e) => DeleteItem(i)" />
+    }
+}
+
+@code {
+    private IEnumerable<CategoryContainer> categories = new List<CategoryContainer>();
+    private IEnumerable<ItemContainer> items = new List<ItemContainer>();
+    private ItemContainer selectedItem = null;
+    private ItemContainer item = new ItemContainer
+    {
+        ItemName = ""
+    };
+
+    private bool Creating = false;
+    private bool Editing = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            item = new ItemContainer();
+            await RefreshItems();
+            await RefreshCategories();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task Select(ItemContainer container)
+    {
+        selectedItem = container;
+        Editing = true;
+
+        await RefreshCategories();
+    }
+
+    private async Task RefreshItems()
+    {
+        items = await Http.GetFromJsonAsync<IEnumerable<ItemContainer>>("Items/list");
+    }
+
+    private async Task RefreshCategories()
+    {
+        categories = await Http.GetFromJsonAsync<IEnumerable<CategoryContainer>>("Categories/list");
+    }
+
+    private async Task AddItem()
+    {
+        await Http.PostAsJsonAsync<ItemContainer>("Items/new", item);
+
+        item = new ItemContainer();
+
+        Creating = false;
+
+        await RefreshItems();
+    }
+
+    private async Task UpdateItem()
+    {
+        if (selectedItem == null)
+        {
+            return;
+        }
+
+        await Http.PostAsJsonAsync<ItemContainer>("Items/update", selectedItem);
+
+        selectedItem = null;
+
+        await RefreshItems();
+    }
+
+    private async Task DeleteItem()
+    {
+        if (selectedItem == null)
+        {
+            return;
+        }
+
+        await Http.PostAsJsonAsync<ItemContainer>("Items/delete", selectedItem);
+
+        selectedItem = null;
+
+        await RefreshItems();
+    }
+
+    private async Task DeleteItem(ItemContainer item)
+    {
+        await Http.PostAsJsonAsync<ItemContainer>("Items/delete", item);
+
+        await RefreshItems();
+    }
+
+    private async Task AddItemCategory(CategoryContainer category)
+    {
+        ItemCategoryContainer itemCategory = new ItemCategoryContainer
+        {
+            CategoryId = category.CategoryId,
+            ItemId = selectedItem.ItemId
+        };
+
+        await Http.PostAsJsonAsync<ItemCategoryContainer>("ItemCategories/new", itemCategory);
+
+        var response = await Http.PostAsJsonAsync<ItemContainer>("Items/get", selectedItem);
+
+        selectedItem = await response.Content.ReadFromJsonAsync<ItemContainer>();
+
+        await RefreshItems();
+    }
+
+    private async Task DeleteItemCategory(CategoryContainer category)
+    {
+        ItemCategoryContainer itemCategory = new ItemCategoryContainer
+        {
+            ItemCategoryId = selectedItem.ItemCategories.Where(e => e.CategoryId == category.CategoryId && e.ItemId == selectedItem.ItemId).First().ItemCategoryId,
+            CategoryId = category.CategoryId,
+            ItemId = selectedItem.ItemId
+        };
+
+        await Http.PostAsJsonAsync<ItemCategoryContainer>("ItemCategories/delete", itemCategory);
+
+        var response = await Http.PostAsJsonAsync<ItemContainer>("Items/get", selectedItem);
+
+        selectedItem = await response.Content.ReadFromJsonAsync<ItemContainer>();
+
+        await RefreshItems();
+    }
+
+}

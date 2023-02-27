@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using Zdk.Shared.Constants;
 using Zdk.Shared.Models;
+using Zdk.Utilities.SignalR;
 
 namespace Zdk.Server.Hubs;
 

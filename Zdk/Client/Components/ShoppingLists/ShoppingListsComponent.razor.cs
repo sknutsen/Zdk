@@ -27,7 +27,7 @@ namespace Zdk.Client
 
         private async Task OnSubmit()
         {
-            NewShoppingList.Items = new List<Item>();
+            NewShoppingList.Items = new List<ShoppingListItem>();
             await ShoppingListsRepo.SendList(NewShoppingList);
 
             NewShoppingList = new ShoppingList();

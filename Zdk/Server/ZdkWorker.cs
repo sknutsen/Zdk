@@ -1,5 +1,4 @@
 ﻿using OpenIddict.Abstractions;
-using Zdk.Server.Data;
 using Zdk.Utilities.Authentication.Data;
 using Zdk.Utilities.Authentication;
 using static OpenIddict.Abstractions.OpenIddictConstants;

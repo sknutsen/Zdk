@@ -1,0 +1,25 @@
+﻿@namespace Zdk.Client.WOSRS
+
+<form id="item-form" @onsubmit="Func">
+    <label for="input">Name</label>
+    <input id="name-input" form="item-form" @bind="item.ItemName" />
+    <input type="submit" form="item-form" />
+</form>
+
+@code {
+    [Parameter]
+    public ItemContainer NewItem { get; set; }
+
+    [Parameter]
+    public EventCallback<ItemContainer> NewItemChanged { get; set; }
+
+    private ItemContainer item
+    {
+        get => NewItem;
+        set => NewItemChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public Func<Task> Func { get; set; }
+
+}

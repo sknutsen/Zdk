@@ -1,0 +1,61 @@
+﻿@page "/settings"
+@namespace Zdk.Client.WOSRS
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
+
+<h3>Settings</h3>
+
+<h4>Choose ordering method</h4>
+<OrderTypeSelect @bind-Selected="OrderType" />
+<br />
+<h4>Use point system?</h4>
+<PointSystemSelect @bind-Selected="PointSystem" />
+
+@code {
+    private SettingsContainer settings = new SettingsContainer();
+    private int OrderType
+    {
+        get => settings.OrderType ?? 0;
+        set
+        {
+            settings.OrderType = value;
+            UpdateSettings();
+        }
+    }
+
+    private bool PointSystem
+    {
+        get => settings.PointSystem;
+        set
+        {
+            settings.PointSystem = value;
+            UpdateSettings();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await RefreshSettings();
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+    }
+
+    private async Task RefreshSettings()
+    {
+        settings = await Http.GetFromJsonAsync<SettingsContainer>("Settings/get");
+    }
+
+    private async Task UpdateSettings()
+    {
+        await Http.PostAsJsonAsync<SettingsContainer>("Settings/update", settings);
+
+        await RefreshSettings();
+    }
+
+}

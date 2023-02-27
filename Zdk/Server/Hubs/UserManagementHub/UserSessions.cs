@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using Zdk.Shared.Constants;
 using Zdk.Shared.Models;
+using Zdk.Utilities.SignalR;
 
 namespace Zdk.Server.Hubs;
 
@@ -29,5 +30,20 @@ public partial class UserManagementHub : BaseHub<UserManagementHub>
         await JoinGroup();
 
         await GetSession();
+    }
+
+    protected override async Task<int> GetGroupId()
+    {
+        string userId = GetUserId();
+        UserSession session = await userSessionHandler.Get(userId);
+
+        return session.GroupId;
+    }
+
+    protected async Task<bool> IsAdmin()
+    {
+        string userId = GetUserId();
+
+        return await userSessionHandler.IsAdmin(userId);
     }
 }

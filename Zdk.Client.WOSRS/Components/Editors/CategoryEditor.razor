@@ -1,0 +1,61 @@
+﻿@namespace Zdk.Client.WOSRS
+
+@inject HttpClient Http
+
+<form id="category-form" @onsubmit="Func">
+    <label for="input">Name</label>
+    <input id="name-input" form="category-form" @bind="category.CategoryName" />
+    <input type="submit" form="category-form" />
+</form>
+
+<br />
+<br />
+
+<h5>Items</h5>
+<div>
+    @foreach (var item in Items)
+    {
+        if (SelectedCategories[item.ItemId])
+        {
+            <ItemStaticComponent Item="item" />
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public CategoryContainer SelectedCategory { get; set; }
+
+    [Parameter]
+    public EventCallback<CategoryContainer> SelectedCategoryChanged { get; set; }
+
+    private CategoryContainer category
+    {
+        get => SelectedCategory;
+        set => SelectedCategoryChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public Func<Task> Func { get; set; }
+
+    [Parameter]
+    public IEnumerable<ItemContainer> Items { get; set; }
+
+    private IDictionary<int, bool> SelectedCategories = new Dictionary<int, bool>();
+
+    protected override Task OnParametersSetAsync()
+    {
+        SelectedCategories = new Dictionary<int, bool>();
+
+        foreach (var item in Items)
+        {
+            int key = item.ItemId;
+            bool value = this.category.ItemCategories.Any(e => e.ItemId == key);
+
+            SelectedCategories.Add(key, value);
+        }
+
+        return base.OnParametersSetAsync();
+    }
+
+}
