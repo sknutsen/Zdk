@@ -23,9 +23,13 @@ string port = builder.Configuration["PORT"];
 
 if (!string.IsNullOrEmpty(port))
 {
+    builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+    {
+        Args = args,
+        ContentRootPath = "/app/out",
+        WebRootPath = "wwwroot",
+    });
     builder.WebHost.UseUrls($"http://*:{port}");
-    builder.WebHost.UseContentRoot("/app/out"); // for railway
-    builder.WebHost.UseWebRoot("wwwroot");
 }
 
 builder.Host.ConfigureLogging(logging =>
