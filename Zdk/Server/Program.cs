@@ -26,28 +26,7 @@ builder.Host.ConfigureLogging(logging =>
     logging.AddEventSourceLogger();
 });
 
-string vaultUri = builder.Configuration["VaultUri"];
-string managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
-
 bool isDev = builder.Environment.IsDevelopment();
-
-builder.Host.ConfigureAppConfiguration((context, config) =>
-{
-    if (!isDev)
-    {
-        Uri keyVaultEndpoint = new(vaultUri);
-        config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId }));
-    }
-});
-
-AzureServiceTokenProvider azureServiceTokenProvider = new();
-KeyVaultClient client = new(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-
-string certName = builder.Configuration["Cert"];
-SecretBundle certificatePrivateKeySecretBundle = client.GetSecretAsync(vaultUri, certName).Result;
-
-byte[] privateKeyBytes = Convert.FromBase64String(certificatePrivateKeySecretBundle.Value);
-X509Certificate2 certificateWithPrivateKey = new(privateKeyBytes, (string)null, X509KeyStorageFlags.MachineKeySet);
 
 string zdkAuthConnectionString = builder.Configuration["ConnectionStrings:ZdkAuthDb"];
 string dataConnectionString = builder.Configuration["ConnectionStrings:DataDb"];
@@ -98,8 +77,10 @@ builder.Services.AddOpenIddict()
                            .AllowRefreshTokenFlow();
 
                     // Register the signing and encryption credentials.
-                    options.AddEncryptionCertificate(certificateWithPrivateKey)
-                           .AddSigningCertificate(certificateWithPrivateKey);
+                    options.AddEphemeralEncryptionKey()
+                           .AddEphemeralSigningKey();
+                    //options.AddEncryptionCertificate(certificateWithPrivateKey)
+                    //       .AddSigningCertificate(certificateWithPrivateKey);
 
                     // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                     options.UseAspNetCore()
