@@ -20,7 +20,7 @@ string port = builder.Configuration["PORT"];
 
 if (!string.IsNullOrEmpty(port))
 {
-    builder.WebHost.UseUrls($"http://*:{port};http://localhost:3000");
+    builder.WebHost.UseUrls($"http://*:{port}");
 }
 
 builder.Host.ConfigureLogging(logging =>
