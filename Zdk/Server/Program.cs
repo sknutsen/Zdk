@@ -24,7 +24,7 @@ string port = builder.Configuration["PORT"];
 if (!string.IsNullOrEmpty(port))
 {
     builder.WebHost.UseUrls($"http://*:{port}");
-    builder.Host.UseContentRoot("/app/out"); // for railway
+    builder.WebHost.UseContentRoot("/app/out"); // for railway
     builder.WebHost.UseWebRoot("wwwroot");
 }
 
