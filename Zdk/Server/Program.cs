@@ -27,6 +27,7 @@ builder.Host.ConfigureLogging(logging =>
 });
 
 string vaultUri = builder.Configuration["VaultUri"];
+string managedIdentityClientId = builder.Configuration["ManagedIdentityClientId"];
 
 bool isDev = builder.Environment.IsDevelopment();
 
@@ -35,7 +36,7 @@ builder.Host.ConfigureAppConfiguration((context, config) =>
     if (!isDev)
     {
         Uri keyVaultEndpoint = new(vaultUri);
-        config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+        config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId }));
     }
 });
 
