@@ -14,13 +14,18 @@ using Zdk.Server.Hubs;
 using Zdk.Server.DataHandlers;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+{
+    Args = args,
+});
 
 string port = builder.Configuration["PORT"];
 
 if (!string.IsNullOrEmpty(port))
 {
     builder.WebHost.UseUrls($"http://*:{port}");
+    builder.Host.UseContentRoot("/app/out"); // for railway
+    builder.WebHost.UseWebRoot("wwwroot");
 }
 
 builder.Host.ConfigureLogging(logging =>
