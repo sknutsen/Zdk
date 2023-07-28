@@ -46,6 +46,10 @@
     <Folder Include="Migrations\Auth\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<None Include="wwwroot\*" />
+	</ItemGroup>
+	
   <ItemGroup>
     <Content Update="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
