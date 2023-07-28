@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Zdk.Shared.Models;
-using Zdk.Utilities.Authentication.Data;
+using Zdk.Utilities.Authentication;
 
 namespace Zdk.DataAccess;
 

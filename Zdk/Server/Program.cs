@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Azure.Security.KeyVault;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
-using Zdk.Utilities.Authentication.Data;
+using Zdk.Utilities.Authentication;
 using Zdk.Server;
 using Zdk.DataAccess;
 using Zdk.Server.Hubs;
@@ -161,7 +161,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = false;
 });
 
-builder.Services.AddHostedService<ZdkWorker>();
+builder.Services.AddHostedService<ZWorker>();
 
 builder.Services.AddScoped<ItemHandler>();
 builder.Services.AddScoped<ShoppingListHandler>();

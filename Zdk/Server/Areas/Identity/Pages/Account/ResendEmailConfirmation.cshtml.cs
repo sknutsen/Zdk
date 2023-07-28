@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Zdk.Utilities.Authentication.Data;
+using Zdk.Utilities.Authentication;
 
 namespace Zdk.Server.Areas.Identity.Pages.Account;
 

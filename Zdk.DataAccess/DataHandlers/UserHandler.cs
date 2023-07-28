@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
-using Zdk.Utilities.Authentication.Data;
+using Zdk.Utilities.Authentication;
 
 namespace Zdk.DataAccess;
 

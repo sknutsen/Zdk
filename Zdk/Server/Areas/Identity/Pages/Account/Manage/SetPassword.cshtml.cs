@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Zdk.Utilities.Authentication.Data;
+using Zdk.Utilities.Authentication;
 
 namespace Zdk.Server.Areas.Identity.Pages.Account.Manage;
 

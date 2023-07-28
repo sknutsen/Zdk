@@ -6,8 +6,7 @@ using Microsoft.Extensions.Logging;
 using OpenIddict.Validation.AspNetCore;
 using System.Threading.Tasks;
 using Zdk.DataAccess;
-using Zdk.Utilities.Authentication.Data;
-using Zdk.Utilities.Authentication.Helpers;
+using Zdk.Utilities.Authentication;
 
 namespace Zdk.Server.WOSRS;
 

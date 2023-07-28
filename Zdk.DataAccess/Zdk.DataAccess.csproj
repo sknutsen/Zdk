@@ -1,25 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities.authentication\1.0.0\contentFiles\any\net6.0\BrowserDebugHost.dll" />
-    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities.authentication\1.0.0\contentFiles\any\net6.0\BrowserDebugHost.runtimeconfig.json" />
-    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities.authentication\1.0.0\contentFiles\any\net6.0\BrowserDebugProxy.dll" />
-    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities.authentication\1.0.0\contentFiles\any\net6.0\Microsoft.CodeAnalysis.CSharp.dll" />
-    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities.authentication\1.0.0\contentFiles\any\net6.0\Microsoft.CodeAnalysis.dll" />
-    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities.authentication\1.0.0\contentFiles\any\net6.0\Newtonsoft.Json.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.13" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.8" />
-	  <PackageReference Include="Zdk.Utilities.Authentication" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+	  <PackageReference Include="Zdk.Utilities" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

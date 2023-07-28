@@ -11,8 +11,7 @@ using System.Threading.Tasks;
 using Zdk.DataAccess;
 using Zdk.Shared.DataContainers;
 using Zdk.Shared.Models;
-using Zdk.Utilities.Authentication.Data;
-using Zdk.Utilities.Authentication.Helpers;
+using Zdk.Utilities.Authentication;
 
 namespace Zdk.Server.WOSRS;
 

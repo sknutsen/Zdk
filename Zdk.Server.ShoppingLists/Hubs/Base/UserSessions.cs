@@ -1,5 +1,5 @@
 ﻿using Zdk.Shared.Models;
-using Zdk.Utilities.Authentication.Helpers;
+using Zdk.Utilities.Authentication;
 
 namespace Zdk.Server.ShoppingLists;
 
