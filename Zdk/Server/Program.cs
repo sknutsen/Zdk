@@ -16,6 +16,13 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+string port = builder.Configuration["PORT"];
+
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://*:{port};http://localhost:3000");
+}
+
 builder.Host.ConfigureLogging(logging =>
 {
     //logging.ClearProviders();
@@ -140,13 +147,6 @@ builder.Services.AddScoped<GroupHandler>();
 builder.Services.AddScoped<GroupMembershipHandler>();
 builder.Services.AddScoped<UserHandler>();
 builder.Services.AddScoped<UserSessionHandler>();
-
-string port = builder.Configuration["PORT"];
-
-if (!string.IsNullOrEmpty(port))
-{
-    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-}
 
 WebApplication app = builder.Build();
 
