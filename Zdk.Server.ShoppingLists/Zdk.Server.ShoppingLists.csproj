@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities\1.0.0\contentFiles\any\net6.0\BrowserDebugHost.dll" />
+    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities\1.0.0\contentFiles\any\net6.0\BrowserDebugHost.runtimeconfig.json" />
+    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities\1.0.0\contentFiles\any\net6.0\BrowserDebugProxy.dll" />
+    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities\1.0.0\contentFiles\any\net6.0\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities\1.0.0\contentFiles\any\net6.0\Microsoft.CodeAnalysis.dll" />
+    <Content Remove="C:\Users\zdk\.nuget\packages\zdk.utilities\1.0.0\contentFiles\any\net6.0\Newtonsoft.Json.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Zdk.DataAccess\Zdk.DataAccess.csproj" />
     <ProjectReference Include="..\Zdk\Shared\Zdk.Shared.csproj" />
   </ItemGroup>

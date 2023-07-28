@@ -15,7 +15,25 @@ using Azure.Security.KeyVault.Secrets;
 using Azure.Security.KeyVault.Certificates;
 using Zdk.Server.WOSRS;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+{
+    Args = args,
+});
+
+string port = builder.Configuration["PORT"];
+
+bool isDev = builder.Environment.IsDevelopment();
+
+if (!string.IsNullOrEmpty(port))
+{
+    builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+    {
+        Args = args,
+        ContentRootPath = "/app/out",
+        WebRootPath = "wwwroot",
+    });
+    builder.WebHost.UseUrls($"http://*:{port}");
+}
 
 builder.Host.ConfigureLogging(logging =>
 {
@@ -26,27 +44,6 @@ builder.Host.ConfigureLogging(logging =>
     logging.AddAzureWebAppDiagnostics();
     logging.AddEventSourceLogger();
 });
-
-string vaultUri = builder.Configuration["VaultUri"];
-
-bool isDev = builder.Environment.IsDevelopment();
-
-builder.Host.ConfigureAppConfiguration((context, config) =>
-{
-    if (!isDev)
-    {
-        Uri keyVaultEndpoint = new(vaultUri);
-        config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
-    }
-});
-DefaultAzureCredential cred = new DefaultAzureCredential();
-SecretClient client = new(new Uri(vaultUri), cred);
-CertificateClient certClient = new(new Uri(vaultUri), cred);
-string certName = builder.Configuration["Cert"];
-KeyVaultSecret certificate = await client.GetSecretAsync(certName);
-
-byte[] privateKeyBytes = Convert.FromBase64String(certificate.Value);
-X509Certificate2 certificateWithPrivateKey = new(privateKeyBytes, (string)null, X509KeyStorageFlags.MachineKeySet);
 
 string zdkAuthConnectionString = builder.Configuration["ConnectionStrings:ZdkAuthDb"];
 string shoppingListConnectionString = builder.Configuration["ConnectionStrings:DataDb"];
@@ -106,8 +103,10 @@ builder.Services.AddOpenIddict()
                            .AllowRefreshTokenFlow();
 
                     // Register the signing and encryption credentials.
-                    options.AddEncryptionCertificate(certificateWithPrivateKey)
-                           .AddSigningCertificate(certificateWithPrivateKey);
+                    options.AddEphemeralEncryptionKey()
+                           .AddEphemeralSigningKey();
+                    //options.AddEncryptionCertificate(certificateWithPrivateKey)
+                    //       .AddSigningCertificate(certificateWithPrivateKey);
 
                     // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                     options.UseAspNetCore()
