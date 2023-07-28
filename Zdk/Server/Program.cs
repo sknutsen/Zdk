@@ -141,6 +141,13 @@ builder.Services.AddScoped<GroupMembershipHandler>();
 builder.Services.AddScoped<UserHandler>();
 builder.Services.AddScoped<UserSessionHandler>();
 
+string port = builder.Configuration["PORT"];
+
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
 WebApplication app = builder.Build();
 
 app.UseResponseCompression();
