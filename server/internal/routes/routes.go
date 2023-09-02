@@ -28,12 +28,16 @@ func NewRouter(config *config.Config, shoppingListItemsHandler *handlers.Shoppin
 	})
 
 	port := os.Getenv("PORT")
+	var hostName string
 
 	if port == "" {
 		port = "8080"
+		hostName = ""
+	} else {
+		hostName = "0.0.0.0"
 	}
 
-	address := fmt.Sprintf(":%s", port)
+	address := fmt.Sprintf("%s:%s", hostName, port)
 
 	app.Static("/", "./wwwroot")
 
