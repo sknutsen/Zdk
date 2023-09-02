@@ -27,8 +27,11 @@ func NewConfig() *Config {
 }
 
 func (config *Config) LoadEnv() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading the .env file: %v", err)
+	env := os.Getenv("ENV")
+	if env != "Railway" {
+		if err := godotenv.Load(); err != nil {
+			log.Fatalf("Error loading the .env file: %v", err)
+		}
 	}
 
 	config.AuthDomain = os.Getenv("AUTH0_DOMAIN")
