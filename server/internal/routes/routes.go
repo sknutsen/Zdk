@@ -3,7 +3,6 @@ package routes
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
@@ -27,7 +26,7 @@ func NewRouter(config *config.Config, shoppingListItemsHandler *handlers.Shoppin
 		Views: engine,
 	})
 
-	port := os.Getenv("PORT")
+	port := config.Port
 	var hostName string
 
 	if port == "" {

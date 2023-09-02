@@ -16,6 +16,7 @@ type Config struct {
 	DbUser       string
 	DbPass       string
 	DbPort       string
+	Port         string
 }
 
 func NewConfig() *Config {
@@ -43,6 +44,8 @@ func (config *Config) LoadEnv() {
 	config.DbUser = os.Getenv("DB_USER")
 	config.DbPass = os.Getenv("DB_PASS")
 	config.DbPort = os.Getenv("DB_PORT")
+
+	config.Port = os.Getenv("PORT")
 
 	os.Clearenv()
 }
