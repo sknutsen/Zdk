@@ -1,51 +1,57 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type ShoppingList struct {
 	gorm.Model
 	ShoppingListId string
 	Name           string
+	DateCreated    time.Time
+	DateChanged    time.Time
 }
 
-type ShoppingListDTOListRequest struct {
+type DTOShoppingListListRequest struct {
 }
 
-type ShoppingListDTOListResponseData struct {
+type DTOShoppingListListResponseData struct {
 	ShoppingListId string `json:"ShoppingListId"`
 	Name           string `json:"Name"`
 }
 
-type ShoppingListDTOListResponse struct {
-	List    []ShoppingListDTOListResponseData `json:"List"`
+type DTOShoppingListListResponse struct {
+	List    []DTOShoppingListListResponseData `json:"List"`
 	Message string                            `json:"Message"`
 	Status  int                               `json:"Status"`
 }
 
-type ShoppingListDTONewRequest struct {
+type DTOShoppingListNewRequest struct {
 	Name string `json:"Name"`
 }
 
-type ShoppingListDTONewResponse struct {
+type DTOShoppingListNewResponse struct {
 	Message string `json:"Message"`
 	Status  int    `json:"Status"`
 }
 
-type ShoppingListDTOUpdateRequest struct {
+type DTOShoppingListUpdateRequest struct {
 	ShoppingListId string `json:"ShoppingListId"`
 	Name           string `json:"Name"`
 }
 
-type ShoppingListDTOUpdateResponse struct {
+type DTOShoppingListUpdateResponse struct {
 	Message string `json:"Message"`
 	Status  int    `json:"Status"`
 }
 
-type ShoppingListDTODeleteRequest struct {
+type DTOShoppingListDeleteRequest struct {
 	ShoppingListId string `json:"ShoppingListId"`
 }
 
-type ShoppingListDTODeleteResponse struct {
+type DTOShoppingListDeleteResponse struct {
 	Message string `json:"Message"`
 	Status  int    `json:"Status"`
 }

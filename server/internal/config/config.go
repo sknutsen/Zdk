@@ -8,26 +8,21 @@ import (
 )
 
 type Config struct {
-	AuthDomain   string
-	AuthAudience string
-	DbType       string
-	DbHost       string
-	DbName       string
-	DbUser       string
-	DbPass       string
-	DbPort       string
-	Port         string
+	AuthDomain       string
+	AuthAudience     string
+	AuthClientId     string
+	AuthClientSecret string
+	AuthCallbackUrl  string
+	DbType           string
+	DbHost           string
+	DbName           string
+	DbUser           string
+	DbPass           string
+	DbPort           string
+	Port             string
 }
 
 func NewConfig() *Config {
-	config := &Config{}
-
-	config.LoadEnv()
-
-	return config
-}
-
-func (config *Config) LoadEnv() {
 	env := os.Getenv("ENV")
 	if env != "Railway" {
 		if err := godotenv.Load(); err != nil {
@@ -35,17 +30,24 @@ func (config *Config) LoadEnv() {
 		}
 	}
 
-	config.AuthDomain = os.Getenv("AUTH0_DOMAIN")
-	config.AuthAudience = os.Getenv("AUTH0_AUDIENCE")
+	config := &Config{
+		AuthDomain:       os.Getenv("AUTH0_DOMAIN"),
+		AuthAudience:     os.Getenv("AUTH0_AUDIENCE"),
+		AuthClientId:     os.Getenv("AUTH0_CLIENT_ID"),
+		AuthClientSecret: os.Getenv("AUTH0_CLIENT_SECRET"),
+		AuthCallbackUrl:  os.Getenv("AUTH0_CALLBACK_URL"),
 
-	config.DbType = os.Getenv("DB_TYPE")
-	config.DbHost = os.Getenv("DB_HOST")
-	config.DbName = os.Getenv("DB_NAME")
-	config.DbUser = os.Getenv("DB_USER")
-	config.DbPass = os.Getenv("DB_PASS")
-	config.DbPort = os.Getenv("DB_PORT")
+		DbType: os.Getenv("DB_TYPE"),
+		DbHost: os.Getenv("DB_HOST"),
+		DbName: os.Getenv("DB_NAME"),
+		DbUser: os.Getenv("DB_USER"),
+		DbPass: os.Getenv("DB_PASS"),
+		DbPort: os.Getenv("DB_PORT"),
 
-	config.Port = os.Getenv("PORT")
+		Port: os.Getenv("PORT"),
+	}
 
 	os.Clearenv()
+
+	return config
 }

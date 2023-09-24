@@ -1,55 +1,61 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type ShoppingListItem struct {
 	gorm.Model
 	ShoppingListItemId string
 	ShoppingListId     string
 	Name               string
+	DateCreated        time.Time
+	DateChanged        time.Time
 }
 
-type ShoppingListItemDTOListRequest struct {
+type DTOShoppingListItemListRequest struct {
 	ShoppingListId string `json:"ShoppingListId"`
 }
 
-type ShoppingListItemDTOListResponseData struct {
+type DTOShoppingListItemListResponseData struct {
 	ShoppingListItemId string `json:"ShoppingListItemId"`
 	ShoppingListId     string `json:"ShoppingListId"`
 	Name               string `json:"Name"`
 }
 
-type ShoppingListItemDTOListResponse struct {
-	List    []ShoppingListDTOListResponseData `json:"List"`
-	Message string                            `json:"Message"`
-	Status  int                               `json:"Status"`
+type DTOShoppingListItemListResponse struct {
+	List    []DTOShoppingListItemListResponseData `json:"List"`
+	Message string                                `json:"Message"`
+	Status  int                                   `json:"Status"`
 }
 
-type ShoppingListItemDTONewRequest struct {
+type DTOShoppingListItemNewRequest struct {
 	ShoppingListId string `json:"ShoppingListId"`
 	Name           string `json:"Name"`
 }
 
-type ShoppingListItemDTONewResponse struct {
+type DTOShoppingListItemNewResponse struct {
 	Message string `json:"Message"`
 	Status  int    `json:"Status"`
 }
 
-type ShoppingListItemDTOUpdateRequest struct {
+type DTOShoppingListItemUpdateRequest struct {
 	ShoppingListItemId string `json:"ShoppingListItemId"`
 	Name               string `json:"Name"`
 }
 
-type ShoppingListItemDTOUpdateResponse struct {
+type DTOShoppingListItemUpdateResponse struct {
 	Message string `json:"Message"`
 	Status  int    `json:"Status"`
 }
 
-type ShoppingListItemDTODeleteRequest struct {
+type DTOShoppingListItemDeleteRequest struct {
 	ShoppingListItemId string `json:"ShoppingListItemId"`
 }
 
-type ShoppingListItemDTODeleteResponse struct {
+type DTOShoppingListItemDeleteResponse struct {
 	Message string `json:"Message"`
 	Status  int    `json:"Status"`
 }

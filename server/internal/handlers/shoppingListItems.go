@@ -15,7 +15,7 @@ func NewShoppingListItemsHandler(storage *storage.ShoppingListItemsStorage) *Sho
 }
 
 func (handler *ShoppingListItemsHandler) List(ctx *fiber.Ctx) error {
-	request := new(models.ShoppingListItemDTOListRequest)
+	request := new(models.DTOShoppingListItemListRequest)
 
 	if err := ctx.BodyParser(request); err != nil {
 		return err
@@ -25,7 +25,7 @@ func (handler *ShoppingListItemsHandler) List(ctx *fiber.Ctx) error {
 }
 
 func (handler *ShoppingListItemsHandler) New(ctx *fiber.Ctx) error {
-	request := new(models.ShoppingListItemDTOListRequest)
+	request := new(models.DTOShoppingListItemListRequest)
 
 	if err := ctx.BodyParser(request); err != nil {
 		return err
@@ -35,7 +35,7 @@ func (handler *ShoppingListItemsHandler) New(ctx *fiber.Ctx) error {
 }
 
 func (handler *ShoppingListItemsHandler) Update(ctx *fiber.Ctx) error {
-	request := new(models.ShoppingListItemDTOListRequest)
+	request := new(models.DTOShoppingListItemListRequest)
 
 	if err := ctx.BodyParser(request); err != nil {
 		return err
@@ -45,7 +45,7 @@ func (handler *ShoppingListItemsHandler) Update(ctx *fiber.Ctx) error {
 }
 
 func (handler *ShoppingListItemsHandler) Delete(ctx *fiber.Ctx) error {
-	request := new(models.ShoppingListItemDTOListRequest)
+	request := new(models.DTOShoppingListItemListRequest)
 
 	if err := ctx.BodyParser(request); err != nil {
 		return err
