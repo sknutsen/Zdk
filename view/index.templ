@@ -1,0 +1,16 @@
+package view
+
+import "github.com/sknutsen/Zdk/models"
+
+templ Index(state models.IndexState) {
+    @MainLayout(state.State) {
+        <div class="index-page">
+            <div class="index-page__tools">
+                <h2>Tools</h2>
+                <div class="index-page__links">
+                    <a href="https://overtime.zdk.no/">Harvest Overtime</a>
+                </div>
+            </div>
+        </div>
+    }
+}

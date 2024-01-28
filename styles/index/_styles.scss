@@ -1,0 +1,42 @@
+.index-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  &__splash {
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: row;
+
+    a {
+      display: inline-block;
+      border-radius: 8px;
+      background-color: $primary-700;
+      color: $on-primary-variant;
+      text-align: center;
+      vertical-align: baseline;
+      padding: 3rem;
+      font-size: 1.5rem;
+      box-shadow: $elevation-overlay-surface-06dp;
+      font-weight: bold;
+      //   height: 100px;
+      //   width: 100px;
+
+      &:hover {
+        background-color: $primary-900;
+        text-decoration: none;
+      }
+    }
+  }
+
+  &__tools {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+}

@@ -1,0 +1,74 @@
+package view
+
+import "fmt"
+import "github.com/sknutsen/Zdk/lib"
+import "github.com/sknutsen/Zdk/models"
+
+templ Schedule(state models.TasksState) {
+    @MainLayout(state.State) {
+        <div id="task-schedule-page">
+            <div class="page-nav">
+                <h1>Schedule</h1>
+                <a href="/tasks">Tasks</a>
+                <a href="/categories">Categories</a>
+            </div>
+            @CurrentTask(state.CurrentScheduledItem)
+            @scheduler(state.TaskHistory)
+        </div>
+    }
+}
+
+templ CurrentTask(item *models.DTOScheduledTaskListResponseData) {
+    <div id="current-task">
+        if item != nil {
+            <h5>{ item.Name }</h5>
+
+            <p>Created: { lib.FormatDateAsString(item.Date) }</p>
+
+            if item.IsComplete {
+                <p>Task is complete 🥳</p>
+            } else {
+                <form hx-post="/scheduled-tasks/complete" hx-swap="outerHTML" hx-target="#current-task" hx-ext="multi-swap">
+                    <input type="hidden" name="scheduledTaskId" value={ item.ScheduledTaskId } />
+                    <button type="submit">Complete</button>
+                </form>
+            }
+        } else {
+            <span>No task for today</span>
+            <button hx-get="/scheduled-tasks/get-task" hx-swap="outerHTML" hx-target="#current-task" hx-ext="multi-swap">
+                Get task
+            </button>
+        }
+    </div>
+}
+
+templ scheduler(list []models.ScheduledTasksByYear) {
+    <div>
+        for _, year := range list {
+            <div>
+                <h4>{ fmt.Sprint(year.Year) }</h4>
+
+                <div>
+                    for _, month := range year.TasksByMonth {
+                        <div>
+                            <h5>{ month.Month.String() }</h5>
+
+                            <div>
+                                for _, v := range month.TaskHistory {
+                                    @scheduledTask(v)
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+templ scheduledTask(item models.DTOScheduledTaskListResponseData) {
+    <div class="container-component">
+        <p>{ item.Name }</p>
+        <p>{ lib.FormatDateAsString(item.Date) }</p>
+    </div>
+}

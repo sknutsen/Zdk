@@ -1,0 +1,15 @@
+package view
+
+import "fmt"
+import "github.com/sknutsen/Zdk/models"
+
+templ User(state models.UserState) {
+    @MainLayout(state.State) {
+        <div class="login-page clearfix">
+            <div class="logged-in-box auth0-box logged-in">
+                <h2>Welcome { fmt.Sprint(state.State.UserProfile.Name) }</h2>
+                <a id="qsLogoutBtn" href="/logout">Sign out</a>
+            </div>
+        </div>
+    }
+}

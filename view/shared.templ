@@ -1,0 +1,86 @@
+package view
+
+import "fmt"
+import "github.com/sknutsen/Zdk/models"
+import "github.com/sknutsen/Zdk/constants"
+
+templ MainLayout(state models.ClientStateBase) {
+    <html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="/css/style.css" rel="stylesheet" />
+        <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+        <script src="https://kit.fontawesome.com/a05e3c7e57.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="main-layout">
+            @topbarComponent(state)
+            <div class="main-layout__body">
+                @sidebarComponent(state)
+                <div class="main-layout__content">{ children... }</div>
+            </div>
+        </div>
+        <script src="/js/index.js"></script>
+        <script src="/js/js.cookie.js"></script>
+        <script src="/js/user.js"></script>
+    </body>
+    </html>
+}
+
+templ sidebarComponent(state models.ClientStateBase) {
+    <div class="sidebar">
+        @indexSidebarItem(state.PageId == constants.IndexPageId)
+        @shoppingListsSidebarItem(state.PageId == constants.ShoppingListsPageId)
+        @tasksSidebarItem(state.PageId == constants.TasksPageId)
+        @todoSidebarItem(state.PageId == constants.TodoPageId)
+        @workoutSidebarItem(state.PageId == constants.WorkoutPageId)
+    </div>
+}
+
+templ indexSidebarItem(isActive bool) {
+    @sidebarItem("house", "/", isActive)
+}
+
+templ shoppingListsSidebarItem(isActive bool) {
+    @sidebarItem("list", "/shoppinglists", isActive)
+}
+
+templ tasksSidebarItem(isActive bool) {
+    @sidebarItem("pen-to-square", "/scheduled-tasks", isActive)
+}
+
+templ todoSidebarItem(isActive bool) {
+    @sidebarItem("check", "/todo", isActive)
+}
+
+templ workoutSidebarItem(isActive bool) {
+    @sidebarItem("dumbbell", "/workout", isActive)
+}
+
+templ sidebarItem(icon string, url string, isActive bool) {
+    <a class={ "sidebar-link", templ.KV("active", isActive) } href={templ.SafeURL(url)}>
+        <i class={fmt.Sprintf("fa-solid fa-%s", icon)}></i>
+    </a>
+}
+
+templ topbarComponent(state models.ClientStateBase) {
+    <div class="topbar">
+        <a class="topbar__home" href="/">Zdk</a>
+        @signInComponent(state)
+    </div>
+}
+
+templ signInComponent(state models.ClientStateBase) {
+    if state.LoggedIn {
+        <a class="topbar__user" href="/user">
+            <img class="avatar" src={ fmt.Sprint(state.UserProfile.Picture) } />
+            { fmt.Sprint(state.UserProfile.Name) }
+        </a>
+    } else {
+        <a class="topbar__sign-in" href="/login">
+            Sign in
+        </a>
+    }
+}

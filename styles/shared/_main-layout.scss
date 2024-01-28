@@ -1,0 +1,21 @@
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  background-color: $surface;
+  color: #94b4da;
+
+  &__body {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__content {
+    background-color: #1a1a2e;
+    padding: 10px;
+    height: calc(100vh - 61px);
+    width: calc(100vw - 61px);
+    border-top: 0.5px solid $outline;
+    border-left: 0.5px solid $outline;
+    border-top-left-radius: 8px;
+  }
+}

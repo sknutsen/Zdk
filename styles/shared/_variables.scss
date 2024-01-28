@@ -1,0 +1,68 @@
+$primary-900: #23036a;
+$primary-800: #30009c;
+$primary-700: #3700b3;
+$primary-600: #5600e8;
+$primary-500: #6200ee;
+$primary-400: #7f39fb;
+$primary-300: #985eff;
+$primary-200: #bb86fc;
+$primary-100: #dbb2ff;
+$primary-050: #f2e7fe;
+
+$primary: $primary-200;
+
+$primary-variant: $primary-700;
+
+$on-primary-he: #000000;
+$on-primary-me: #000000bd;
+$on-primary-disabled: #000000;
+
+$on-primary-variant: #ffffff;
+
+$secondary-900: #005457;
+$secondary-800: #017374;
+$secondary-700: #018786;
+$secondary-600: #019592;
+$secondary-500: #01a299;
+$secondary-400: #00b3a6;
+$secondary-300: #00c4b4;
+$secondary-200: #03dac5;
+$secondary-100: #70efde;
+$secondary-050: #c8fff4;
+
+$on-secondary: #00000061;
+
+$background: #121212;
+$on-background: #ffffffde;
+
+$surface: #121212;
+
+$on-surface-he: #ffffffde;
+$on-surface-me: #ffffff99;
+$on-surface-disabled: #ffffff61;
+
+$error: #cf6679;
+
+$on-error: #000000;
+
+$outline: #ffffff1f;
+
+$elevation-overlay-surface-00dp: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+$elevation-overlay-surface-01dp: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+  0px 2px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-02dp: 0px 1px 5px 0px rgba(0, 0, 0, 0.2),
+  0px 3px 1px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-03dp: 0px 1px 8px 0px rgba(0, 0, 0, 0.2),
+  0px 3px 3px 0px rgba(0, 0, 0, 0.12), 0px 3px 4px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-04dp: 0px 2px 4px 0px rgba(0, 0, 0, 0.2),
+  0px 1px 10px 0px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-06dp: 0px 3px 5px 0px rgba(0, 0, 0, 0.2),
+  0px 1px 18px 0px rgba(0, 0, 0, 0.12), 0px 6px 10px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-08dp: 0px 5px 5px 0px rgba(0, 0, 0, 0.2),
+  0px 3px 14px 0px rgba(0, 0, 0, 0.12), 0px 8px 10px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-12dp: 0px 7px 8px 0px rgba(0, 0, 0, 0.2),
+  0px 5px 22px 0px rgba(0, 0, 0, 0.12), 0px 12px 17px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-16dp: 0px 8px 10px 0px rgba(0, 0, 0, 0.2),
+  0px 6px 30px 0px rgba(0, 0, 0, 0.12), 0px 16px 24px 0px rgba(0, 0, 0, 0.14);
+$elevation-overlay-surface-24dp: 0px 11px 15px 0px rgba(0, 0, 0, 0.2),
+  0px 9px 46px 0px rgba(0, 0, 0, 0.12), 0px 24px 38px 0px rgba(0, 0, 0, 0.14);

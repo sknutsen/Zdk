@@ -1,0 +1,89 @@
+package view
+
+import "fmt"
+import "github.com/sknutsen/Zdk/models"
+import "github.com/sknutsen/Zdk/lib"
+
+templ TasksPage(state models.TasksState) {
+    @MainLayout(state.State) {
+        <div id="tasks-page">
+            <div class="page-nav">
+                <h1>Tasks</h1>
+                <a href="/scheduled-tasks">Schedule</a>
+                <a href="/categories">Categories</a>
+            </div>
+            @ListTasks(state.Tasks)
+        </div>
+    }
+}
+
+templ ListTasks(tasks []models.Task) {
+    <div id="tasks-page__content">
+        <h3>
+            <span>Tasks</span>
+            <button type="button" hx-get="/tasks/create" hx-swap="outerHTML" hx-target="#tasks-page__content" hx-ext="multi-swap">
+                Create
+            </button>
+        </h3>
+
+        <div class="tasks-page__list_tasks">
+            for _, v := range tasks {
+                <div class="tasks-page__task">
+                    <span>{ v.Name }</span>
+                    <button type="button" hx-get={ fmt.Sprintf("/tasks/edit/%s", v.TaskId)} hx-swap="outerHTML" hx-target="#tasks-page__content" hx-ext="multi-swap">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button type="button" hx-get={ fmt.Sprintf("/tasks/delete/%s", v.TaskId)} hx-swap="outerHTML" hx-target="#tasks-page__content" hx-ext="multi-swap">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+templ EditTask(task *models.DTOTaskUpdateRequest, list []models.Category) {
+    <div id="tasks-page__content">
+        <h3>
+            <span>Editing</span>
+            <a href="/tasks">Go back</a>
+        </h3>
+        <form id="item-form" hx-post="/tasks/update" hx-swap="outerHTML" hx-target="#tasks-page__content" hx-ext="multi-swap">
+            <input type="hidden" name="taskId" value={task.TaskId} />
+            <label for="name-input">Name</label>
+            <input id="name-input" name="name" value={task.Name} />
+            <button type="submit">Save</button>
+
+            <h5>Categories</h5>
+            @TaskCategoriesForm(list, task.Categories)
+        </form>
+    </div>
+}
+
+templ CreateTask(list []models.Category) {
+    <div id="tasks-page__content">
+        <h3>
+            <span>New task</span>
+            <a href="/tasks">Go back</a>
+        </h3>
+        <form id="item-form" hx-post="/tasks/new" hx-swap="outerHTML" hx-target="#tasks-page__content" hx-ext="multi-swap">
+            <label for="name-input">Name</label>
+            <input id="name-input" name="name" />
+            <button type="submit">Save</button>
+
+            <h5>Categories</h5>
+            @TaskCategoriesForm(list, nil)
+        </form>
+    </div>
+}
+
+templ TaskCategoriesForm(list []models.Category, selected []string) {
+    <div id="tasks-category-list">
+        for _, v := range list {
+            <div class="tasks-category-list__task">
+                <label for={fmt.Sprintf("task-category__%s", v.CategoryId)}>{v.Name}</label>
+                <input type="checkbox" id={fmt.Sprintf("category-task__%s", v.CategoryId)} name="categories" value={v.CategoryId} checked?={lib.CategoryIsSelected(v, selected)} />
+            </div>
+        }
+    </div>
+}

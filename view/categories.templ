@@ -1,0 +1,87 @@
+package view
+
+import "fmt"
+import "github.com/sknutsen/Zdk/lib"
+import "github.com/sknutsen/Zdk/models"
+
+templ CategoriesPage(state models.TasksState) {
+    @MainLayout(state.State) {
+        <div id="categories-page">
+            <div class="page-nav">
+                <h1>Categories</h1>
+                <a href="/scheduled-tasks">Schedule</a>
+                <a href="/tasks">Tasks</a>
+            </div>
+            @ListCategories(state.Categories)
+        </div>
+    }
+}
+
+templ ListCategories(list []models.Category) {
+    <div id="categories-page__content">
+        <h3>
+            <span>Categories</span>
+            <button type="button" hx-get="/categories/create" hx-swap="outerHTML" hx-target="#categories-page__content" hx-ext="multi-swap">
+                Create
+            </button>
+        </h3>
+
+        <div class="categories-page__list_tasks">
+            for _, v := range list {
+                <div class="categories-page__category">
+                    <span>{ v.Name }</span>
+                    <button type="button" hx-get={ fmt.Sprintf("/categories/edit/%s", v.CategoryId)} hx-swap="outerHTML" hx-target="#categories-page__content" hx-ext="multi-swap">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button type="button" hx-get={ fmt.Sprintf("/categories/delete/%s", v.CategoryId)} hx-swap="outerHTML" hx-target="#categories-page__content" hx-ext="multi-swap">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+templ EditCategory(category *models.DTOCategoryUpdateRequest, list []models.Task) {
+    <div id="categories-page__content">
+        <h3>
+            <span>Editing</span>
+            <a href="/categories">Go back</a>
+        </h3>
+        <form id="category-form" hx-post="/categories/update" hx-swap="outerHTML" hx-target="#categories-page__content" hx-ext="multi-swap">
+            <input type="hidden" name="categoryId" value={category.CategoryId} />
+            <label for="name-input">Name</label>
+            <input id="name-input" name="name" value={category.Name} />
+            <button type="submit">Save</button>
+
+            <h5>Tasks</h5>
+            @CategoryTasksForm(list, category.Tasks)
+        </form>
+    </div>
+}
+
+templ CreateCategory(list []models.Task) {
+    <div id="categories-page__content">
+        <h3>
+            <span>Creating</span>
+            <a href="/categories">Go back</a>
+        </h3>
+        <form id="category-form" hx-post="/categories/new" hx-swap="outerHTML" hx-target="#categories-page__content" hx-ext="multi-swap">
+            <label for="name-input">Name</label>
+            <input id="name-input" name="name" />
+            <button type="submit">Save</button>
+            @CategoryTasksForm(list, nil)
+        </form>
+    </div>
+}
+
+templ CategoryTasksForm(list []models.Task, selected []string) {
+    <div id="category-tasks-list">
+        for _, v := range list {
+            <div class="category-tasks-list__task">
+                <label for={fmt.Sprintf("category-task__%s", v.TaskId)}>{v.Name}</label>
+                <input type="checkbox" id={fmt.Sprintf("category-task__%s", v.TaskId)} name="tasks" value={v.TaskId} checked?={lib.TaskIsSelected(v, selected)} />
+            </div>
+        }
+    </div>
+}

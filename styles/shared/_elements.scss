@@ -1,0 +1,82 @@
+body {
+  font-family: Roboto, sans-serif;
+  // font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-family: Roboto, sans-serif;
+  font-size: 96px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 112px; /* 116.667% */
+  letter-spacing: -1.5px;
+}
+
+h2 {
+  font-family: Roboto, sans-serif;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 72px; /* 120% */
+  letter-spacing: -0.5px;
+}
+
+h3 {
+  font-family: Roboto, sans-serif;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 56px; /* 116.667% */
+}
+
+h4 {
+  font-family: Roboto, sans-serif;
+  font-size: 34px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 36px; /* 105.882% */
+}
+
+h5 {
+  font-family: Roboto, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 100% */
+  letter-spacing: 0.18px;
+}
+
+h6 {
+  font-family: Roboto, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 120% */
+  letter-spacing: 0.15px;
+}
+
+button {
+  font-family: Roboto, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px; /* 114.286% */
+  letter-spacing: 1.25px;
+  text-transform: uppercase;
+  padding: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+a {
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
