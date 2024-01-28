@@ -22,6 +22,7 @@ type Config struct {
 	DbPort           string
 	DbUpdate         bool
 	Port             string
+	Host             string
 }
 
 func NewConfig() *Config {
@@ -31,18 +32,27 @@ func NewConfig() *Config {
 			log.Fatalf("Error loading the .env file: %v", err)
 		}
 	}
-	var hostName string
 
 	port := os.Getenv("PORT")
 
-	if port == "" {
-		port = "8080"
-		hostName = "127.0.0.1"
-	} else {
-		hostName = "0.0.0.0"
-	}
+	var callbackUrl string
 
-	callbackUrl := fmt.Sprintf("http://%s:%s/%s", hostName, port, os.Getenv("AUTH0_CALLBACK_URL"))
+	host := os.Getenv("HOST")
+
+	if host != "" {
+		callbackUrl = fmt.Sprintf("http://%s/%s", os.Getenv("HOST"), os.Getenv("AUTH0_CALLBACK_URL"))
+	} else {
+		var hostName string
+
+		if port == "" {
+			port = "8080"
+			hostName = "127.0.0.1"
+		} else {
+			hostName = "0.0.0.0"
+		}
+
+		callbackUrl = fmt.Sprintf("http://%s:%s/%s", hostName, port, os.Getenv("AUTH0_CALLBACK_URL"))
+	}
 
 	config := &Config{
 		AuthDomain:       os.Getenv("AUTH0_DOMAIN"),
@@ -58,6 +68,8 @@ func NewConfig() *Config {
 		DbPass:   os.Getenv("DB_PASS"),
 		DbPort:   os.Getenv("DB_PORT"),
 		DbUpdate: os.Getenv("DB_UPDATE") != "false",
+
+		Host: host,
 
 		Port: port,
 	}
