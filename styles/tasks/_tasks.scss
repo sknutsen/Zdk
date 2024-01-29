@@ -1,0 +1,102 @@
+#categories-page {
+  &__content {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .categories-page__list-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .categories-page__category {
+    display: flex;
+    flex-direction: row;
+    border: thin solid $outline;
+    background-color: $primary-variant;
+    padding: 5px;
+    border-radius: 4px;
+    align-items: center;
+    gap: 5px;
+    width: 400px;
+
+    span {
+      flex-grow: 2;
+      color: $on-primary-variant;
+    }
+  }
+}
+
+#task-schedule-page {
+  #current-task {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+    border: thin solid $outline;
+    background-color: $surface;
+
+    &__header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    form {
+      width: 100%;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .container-component {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+    border: thin solid $outline;
+    background-color: $surface;
+  }
+}
+
+#tasks-page {
+  &__content {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .tasks-page__list-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tasks-page__task {
+    display: flex;
+    flex-direction: row;
+    border: thin solid $outline;
+    background-color: $primary-variant;
+    padding: 5px;
+    border-radius: 4px;
+    align-items: center;
+    gap: 5px;
+    width: 400px;
+    box-shadow: $elevation-overlay-surface-06dp;
+
+    span {
+      flex-grow: 2;
+      color: $on-primary-variant;
+    }
+  }
+}

@@ -100,7 +100,7 @@ func (handler *TasksHandler) New(ctx *fiber.Ctx) error {
 		handler.Ctx.DB.Create(&taskCategory)
 	}
 
-	return ctx.Redirect("/tasks")
+	return ctx.Redirect("/tasks/list")
 }
 
 func (handler *TasksHandler) Update(ctx *fiber.Ctx) error {

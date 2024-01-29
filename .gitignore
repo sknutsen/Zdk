@@ -9,6 +9,7 @@
 tmp/
 
 .env
+prod.env
 
 # User-specific files
 *.rsuser

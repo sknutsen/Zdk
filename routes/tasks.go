@@ -54,6 +54,7 @@ func setupTasksRoutes(
 
 		return view.Render(c, view.TasksPage(state))
 	})
+	tasksGroup.Get("/list", mw.IsAuthenticated, tasksHandler.List)
 	tasksGroup.Get("/create", mw.IsAuthenticated, tasksHandler.Create)
 	tasksGroup.Get("/edit/:id", mw.IsAuthenticated, tasksHandler.Edit)
 	tasksGroup.Post("/new", mw.IsAuthenticated, tasksHandler.New)
@@ -92,6 +93,7 @@ func setupTasksRoutes(
 
 		return view.Render(c, view.CategoriesPage(state))
 	})
+	categoriesGroup.Get("/list", mw.IsAuthenticated, categoriesHandler.List)
 	categoriesGroup.Get("/create", mw.IsAuthenticated, categoriesHandler.Create)
 	categoriesGroup.Get("/edit/:id", mw.IsAuthenticated, categoriesHandler.Edit)
 	categoriesGroup.Post("/new", mw.IsAuthenticated, categoriesHandler.New)

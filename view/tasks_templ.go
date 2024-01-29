@@ -119,7 +119,7 @@ func ListTasks(tasks []models.Task) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></h3><div class=\"tasks-page__list_tasks\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></h3><div class=\"tasks-page__list-tasks\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -21,9 +21,11 @@ templ Schedule(state models.TasksState) {
 templ CurrentTask(item *models.DTOScheduledTaskListResponseData) {
     <div id="current-task">
         if item != nil {
-            <h5>{ item.Name }</h5>
+            <div id="current-task__header">
+                <h5>{ item.Name }</h5>
 
-            <p>Created: { lib.FormatDateAsString(item.Date) }</p>
+                <p>{ lib.FormatDateAsString(item.Date) }</p>
+            </div>
 
             if item.IsComplete {
                 <p>Task is complete 🥳</p>
@@ -34,7 +36,9 @@ templ CurrentTask(item *models.DTOScheduledTaskListResponseData) {
                 </form>
             }
         } else {
-            <span>No task for today</span>
+            <div id="current-task__header">
+                <h5>No task for today</h5>
+            </div>
             <button hx-get="/scheduled-tasks/get-task" hx-swap="outerHTML" hx-target="#current-task" hx-ext="multi-swap">
                 Get task
             </button>

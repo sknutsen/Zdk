@@ -119,7 +119,7 @@ func ListCategories(list []models.Category) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></h3><div class=\"categories-page__list_tasks\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></h3><div class=\"categories-page__list-categories\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
