@@ -34,6 +34,7 @@ func NewRouter(
 	categoriesHandler *handlers.CategoriesHandler,
 	taskCategoriesHandler *handlers.TaskCategoriesHandler,
 	scheduledTasksHandler *handlers.ScheduledTasksHandler,
+	workoutHandler *handlers.WorkoutHandler,
 	sessionManager *auth.SessionManager,
 	authenticator *auth.Authenticator,
 	mw *middleware.Middleware,
@@ -94,6 +95,7 @@ func NewRouter(
 
 	setupShoppingListRoutes(app, config, shoppingListsHandler, shoppingListItemsHandler, sessionManager, mw, log)
 	setupTasksRoutes(app, config, tasksHandler, taskCategoriesHandler, categoriesHandler, scheduledTasksHandler, sessionManager, mw, log)
+	setupWorkoutsRoutes(app, config, workoutHandler, sessionManager, mw, log)
 
 	log.Fatal(app.Listen(address).Error())
 }

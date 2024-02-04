@@ -56,7 +56,7 @@ templ todoSidebarItem(isActive bool) {
 }
 
 templ workoutSidebarItem(isActive bool) {
-    @sidebarItem("dumbbell", "/workout", isActive)
+    @sidebarItem("dumbbell", "/workouts", isActive)
 }
 
 templ sidebarItem(icon string, url string, isActive bool) {
@@ -83,4 +83,11 @@ templ signInComponent(state models.ClientStateBase) {
             Sign in
         </a>
     }
+}
+
+templ input(labelText string, id string, name string, valueType string, value string) {
+    <div class="input-wrapper">
+        <label for={ fmt.Sprintf("%s-input", id) }>{labelText}</label>
+        <input id={ fmt.Sprintf("%s-input", id) } name={name} type={valueType} value={value} />
+    </div>
 }

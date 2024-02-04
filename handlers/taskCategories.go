@@ -3,7 +3,6 @@ package handlers
 import (
 	"time"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/sknutsen/Zdk/data"
 	"github.com/sknutsen/Zdk/models"
@@ -17,56 +16,6 @@ type TaskCategoriesHandler struct {
 
 func NewTaskCategoriesHandler(ctx *data.ZdkContext, userHandler *UserHandler) *TaskCategoriesHandler {
 	return &TaskCategoriesHandler{Ctx: ctx, UserHandler: userHandler}
-}
-
-func (handler *TaskCategoriesHandler) List(ctx *fiber.Ctx) error {
-	request := new(models.DTOTaskCategoryListRequest)
-
-	if err := ctx.BodyParser(request); err != nil {
-		return err
-	}
-
-	return ctx.SendString("")
-}
-
-func (handler *TaskCategoriesHandler) New(ctx *fiber.Ctx) error {
-	request := new(models.DTOTaskCategoryNewRequest)
-
-	if err := ctx.BodyParser(request); err != nil {
-		return err
-	}
-
-	object := models.TaskCategory{
-		TaskCategoryId: uuid.NewString(),
-		TaskId:         request.TaskId,
-		CategoryId:     request.CategoryId,
-		DateCreated:    time.Now(),
-		DateChanged:    time.Now(),
-	}
-
-	handler.Ctx.DB.Create(object)
-
-	return ctx.SendString("")
-}
-
-func (handler *TaskCategoriesHandler) Update(ctx *fiber.Ctx) error {
-	request := new(models.DTOTaskCategoryUpdateRequest)
-
-	if err := ctx.BodyParser(request); err != nil {
-		return err
-	}
-
-	return ctx.SendString("")
-}
-
-func (handler *TaskCategoriesHandler) Delete(ctx *fiber.Ctx) error {
-	request := new(models.DTOTaskCategoryDeleteRequest)
-
-	if err := ctx.BodyParser(request); err != nil {
-		return err
-	}
-
-	return ctx.SendString("")
 }
 
 func buildTaskCategoriesAddList(selected []models.TaskCategory, list []models.TaskCategory) []models.TaskCategory {

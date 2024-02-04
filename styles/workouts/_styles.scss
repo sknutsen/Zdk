@@ -1,0 +1,84 @@
+#workouts-page {
+  .workouts-page__content {
+  }
+
+  .workouts-page__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .workouts-page__workout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    border: thin solid $outline;
+    background-color: $surface;
+    width: 300px;
+
+    &_buttons {
+    }
+
+    &_description {
+      display: flex;
+      flex-direction: column;
+      color: $on-primary-variant;
+    }
+  }
+}
+
+#workout-form,
+#exercise-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: stretch;
+
+  fieldset {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    border: none;
+    align-self: stretch;
+  }
+
+  .input-wrapper {
+    // align-self: stretch;
+    flex-grow: 2;
+
+    input,
+    label,
+    select {
+      width: 100%;
+    }
+  }
+
+  #time-inputs {
+    .input-wrapper {
+      width: 75px;
+    }
+  }
+
+  button {
+    display: block;
+  }
+}
+
+#workout-form {
+  width: 300px;
+
+  button {
+    width: 200px;
+  }
+}
+
+#exercise-form {
+  width: 500px;
+
+  button {
+    width: 300px;
+  }
+}

@@ -73,12 +73,6 @@ func GroupScheduledTasks(st []DTOScheduledTaskListResponseData) []ScheduledTasks
 	return hist
 }
 
-type DTOScheduledTaskListRequest struct {
-	TaskId     string    `json:"TaskId"`
-	IsComplete bool      `json:"IsComplete"`
-	Date       time.Time `json:"Date"`
-}
-
 type DTOScheduledTaskListResponseData struct {
 	ScheduledTaskId string    `json:"ScheduledTaskId"`
 	TaskId          string    `json:"TaskId"`
@@ -87,21 +81,10 @@ type DTOScheduledTaskListResponseData struct {
 	Date            time.Time `json:"Date"`
 }
 
-type DTOScheduledTaskListResponse struct {
-	List    []DTOScheduledTaskListResponseData `json:"List"`
-	Message string                             `json:"Message"`
-	Status  int                                `json:"Status"`
-}
-
 type DTOScheduledTaskNewRequest struct {
 	TaskId     string    `json:"taskId"`
 	IsComplete bool      `json:"isComplete"`
 	Date       time.Time `json:"date"`
-}
-
-type DTOScheduledTaskNewResponse struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
 }
 
 type DTOScheduledTaskUpdateRequest struct {
@@ -110,31 +93,6 @@ type DTOScheduledTaskUpdateRequest struct {
 	Date            time.Time `json:"date"`
 }
 
-type DTOScheduledTaskUpdateResponse struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-}
-
-type DTOScheduledTaskDeleteRequest struct {
-	ScheduledTaskId string `json:"scheduledTaskId"`
-}
-
-type DTOScheduledTaskDeleteResponse struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-}
-
 type DTOScheduledTaskCompleteRequest struct {
 	ScheduledTaskId string `json:"scheduledTaskId"`
-}
-
-type DTOScheduledTaskCompleteResponse struct {
-	Message string `json:"message"`
-	Status  int    `json:"status"`
-}
-
-type DTOScheduledTaskGetCurrentTaskRequest struct {
-}
-
-type DTOScheduledTaskGetHistoryRequest struct {
 }

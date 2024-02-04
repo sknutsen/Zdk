@@ -11,6 +11,7 @@ h1 {
   font-weight: 300;
   line-height: 112px; /* 116.667% */
   letter-spacing: -1.5px;
+  margin: 5px;
 }
 
 h2 {
@@ -28,6 +29,7 @@ h3 {
   font-style: normal;
   font-weight: 400;
   line-height: 56px; /* 116.667% */
+  margin: 2px;
 }
 
 h4 {
@@ -77,6 +79,11 @@ a {
 }
 a:hover {
   text-decoration: underline;
+}
+
+.input-wrapper input,
+.input-wrapper label {
+  display: block;
 }
 
 .main-layout {
@@ -301,6 +308,78 @@ a:hover {
 .page-nav a:hover {
   background-color: #23036a;
   text-decoration: none;
+}
+
+#workouts-page .workouts-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#workouts-page .workouts-page__workout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  border: thin solid rgba(255, 255, 255, 0.1215686275);
+  background-color: #121212;
+  width: 300px;
+}
+#workouts-page .workouts-page__workout_description {
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+}
+
+#workout-form,
+#exercise-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: stretch;
+}
+#workout-form fieldset,
+#exercise-form fieldset {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  border: none;
+  align-self: stretch;
+}
+#workout-form .input-wrapper,
+#exercise-form .input-wrapper {
+  flex-grow: 2;
+}
+#workout-form .input-wrapper input,
+#workout-form .input-wrapper label,
+#workout-form .input-wrapper select,
+#exercise-form .input-wrapper input,
+#exercise-form .input-wrapper label,
+#exercise-form .input-wrapper select {
+  width: 100%;
+}
+#workout-form #time-inputs .input-wrapper,
+#exercise-form #time-inputs .input-wrapper {
+  width: 75px;
+}
+#workout-form button,
+#exercise-form button {
+  display: block;
+}
+
+#workout-form {
+  width: 300px;
+}
+#workout-form button {
+  width: 200px;
+}
+
+#exercise-form {
+  width: 500px;
+}
+#exercise-form button {
+  width: 300px;
 }
 
 .subtitle-1 {

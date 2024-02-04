@@ -98,7 +98,9 @@ func GetUserState(profile interface{}) UserState {
 }
 
 type WorkoutState struct {
-	State ClientStateBase
+	State          ClientStateBase
+	WorkoutContext *DTOWorkoutUpdateRequest
+	Workouts       []Workout
 }
 
 func GetWorkoutState(profile interface{}) WorkoutState {

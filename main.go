@@ -34,6 +34,7 @@ func main() {
 			handlers.NewUserHandler,
 			handlers.NewUserSettingsHandler,
 			handlers.NewUsersHandler,
+			handlers.NewWorkoutHandler,
 		),
 		fx.WithLogger(func(log *zap.Logger) fxevent.Logger {
 			return &fxevent.ZapLogger{Logger: log}

@@ -45,7 +45,7 @@ templ ListCategories(list []models.Category) {
 templ EditCategory(category *models.DTOCategoryUpdateRequest, list []models.Task) {
     <div id="categories-page__content">
         <h3>
-            <span>Editing</span>
+            <span>Editing {category.Name}</span>
             <a href="/categories">Go back</a>
         </h3>
         <form id="category-form" hx-post="/categories/update" hx-swap="outerHTML" hx-target="#categories-page__content" hx-ext="multi-swap">

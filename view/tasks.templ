@@ -45,7 +45,7 @@ templ ListTasks(tasks []models.Task) {
 templ EditTask(task *models.DTOTaskUpdateRequest, list []models.Category) {
     <div id="tasks-page__content">
         <h3>
-            <span>Editing</span>
+            <span>Editing {task.Name}</span>
             <a href="/tasks">Go back</a>
         </h3>
         <form id="item-form" hx-post="/tasks/update" hx-swap="outerHTML" hx-target="#tasks-page__content" hx-ext="multi-swap">

@@ -1,0 +1,248 @@
+package view
+
+import "fmt"
+import "github.com/sknutsen/Zdk/models"
+
+templ WorkoutsPage(state models.WorkoutState) {
+    @MainLayout(state.State) {
+        <div id="workouts-page">
+            <div class="page-nav">
+                <h1>Workouts</h1>
+            </div>
+            @ListWorkouts(state.Workouts)
+        </div>
+    }
+}
+
+templ ListWorkouts(workouts []models.Workout) {
+    <div id="workouts-page__content">
+        <h3>
+            <span>Workouts</span>
+            <button type="button" hx-get="/workouts/create" hx-swap="outerHTML" hx-target="#workouts-page__content" hx-ext="multi-swap">
+                Create
+            </button>
+        </h3>
+
+        <div class="workouts-page__list">
+            for _, v := range workouts {
+                <div class="workouts-page__workout">
+                    <div class="workouts-page__workout_description">
+                        <span>{ v.Date }</span>
+                        <span>{ v.Name }</span>
+                        <span>{ v.Description }</span>
+                    </div>
+                    <div class="workouts-page__workout_buttons">
+                        <button type="button" hx-get={ fmt.Sprintf("/workouts/edit/%s", v.WorkoutId) } hx-swap="outerHTML" hx-target="#workouts-page__content" hx-ext="multi-swap">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button type="button" hx-get={ fmt.Sprintf("/workouts/delete/%s", v.WorkoutId) } hx-swap="outerHTML" hx-target="#workouts-page__content" hx-ext="multi-swap">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+templ EditWorkout(workout *models.DTOWorkoutUpdateRequest) {
+    <div id="workouts-page__content">
+        <h3>
+            <span>Editing {workout.Name}</span>
+            <a href="/workouts">Go back</a>
+        </h3>
+        <form id="workout-form" hx-post="/workouts/update" hx-swap="outerHTML" hx-target="#workouts-page__content" hx-ext="multi-swap">
+            <input type="hidden" name="workoutId" value={workout.WorkoutId} />
+            
+            <fieldset>
+                @input("Name", "name", "name", "text", workout.Name)
+            </fieldset>
+            
+            <fieldset>
+                @input("Date", "date", "date", "date", workout.Date)
+            </fieldset>
+            
+            <fieldset>
+                @input("Description", "description", "description", "text", workout.Description)
+            </fieldset>
+            
+            <button type="submit">Save</button>
+        </form>
+        @ListExercises(workout.WorkoutId, workout.Exercises)
+    </div>
+}
+
+templ CreateWorkout() {
+    <div id="workouts-page__content">
+        <h3>
+            <span>New workout</span>
+            <a href="/workouts">Go back</a>
+        </h3>
+        <form id="workout-form" hx-post="/workouts/new" hx-swap="outerHTML" hx-target="#workouts-page__content" hx-ext="multi-swap">
+            <fieldset>
+                @input("Name", "exercise-name", "name", "text", "")
+            </fieldset>
+            
+            <fieldset>
+                @input("Date", "date", "date", "date", "")
+            </fieldset>
+            
+            <fieldset>
+                @input("Description", "description", "description", "text", "")
+            </fieldset>
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+}
+
+templ ListExercises(workoutId string, workouts []models.Exercise) {
+    <div id="workouts-page__workout_exercises">
+        <h3>
+            <span>Exercises</span>
+            <button type="button" hx-get={ fmt.Sprintf("/workouts/edit/%s/exercises/create", workoutId) } hx-swap="outerHTML" hx-target="#workouts-page__workout_exercises" hx-ext="multi-swap">
+                Create
+            </button>
+        </h3>
+
+        <div class="workouts-page__list">
+            for _, v := range workouts {
+                <div class="workouts-page__exercise">
+                    <span>{ v.Name }</span>
+                    <button type="button" hx-get={ fmt.Sprintf("/workouts/edit/%s/exercises/edit/%s", v.WorkoutId, v.ExerciseId) } hx-swap="outerHTML" hx-target="#workouts-page__workout_exercises" hx-ext="multi-swap">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button type="button" hx-get={ fmt.Sprintf("/workouts/edit/%s/exercises/delete/%s", v.WorkoutId, v.ExerciseId) } hx-swap="outerHTML" hx-target="#workouts-page__workout_exercises" hx-ext="multi-swap">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+templ EditExercise(workout *models.DTOExerciseUpdateRequest, exerciseDefs []models.ExerciseDef, equipment []models.Equipment, unitTypes []models.UnitType) {
+    <div id="workouts-page__workout_exercises">
+        <h3>
+            <span>Editing {workout.Name}</span>
+            <a href="/workouts">Go back</a>
+        </h3>
+        <form id="exercise-form" hx-post={ fmt.Sprintf("/workouts/edit/%s/exercises/update", workout.WorkoutId) } hx-swap="outerHTML" hx-target="#workouts-page__workout_exercises" hx-ext="multi-swap">
+            <input type="hidden" name="exerciseId" value={workout.ExerciseId} />
+            
+            <fieldset>
+                @input("Name", "exercise-name", "name", "text", workout.Name)
+            </fieldset>
+            
+            <fieldset id="details-inputs">
+                <div class="input-wrapper">
+                    <label for="exercise-def-input">Exercise type</label>
+                    <select id="exercise-def-input" name="exerciseDefId">
+                        for _, v := range exerciseDefs {
+                            <option value={fmt.Sprint(v.ExerciseDefId)} selected?={v.ExerciseDefId == workout.ExerciseDefId}>{v.Name}</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="equipment-input">Equipment</label>
+                    <select id="equipment-input" name="equipmentId">
+                        for _, v := range equipment {
+                            <option value={fmt.Sprint(v.EquipmentId)} selected?={v.EquipmentId == workout.EquipmentId}>{v.Name}</option>
+                        }
+                    </select>
+                </div>
+            </fieldset>
+            
+            <fieldset id="time-inputs">
+                @input("Hours", "hours", "hours", "number", fmt.Sprint(workout.Hours))
+                
+                @input("Minutes", "minutes", "minutes", "number", fmt.Sprint(workout.Minutes))
+                
+                @input("Seconds", "seconds", "seconds", "number", fmt.Sprint(workout.Seconds))
+            </fieldset>
+            
+            <fieldset id="units-inputs">
+                @input("Units", "units", "units", "number", fmt.Sprint(workout.Units))
+                
+                <div class="input-wrapper">
+                    <label for="unit-type-input">Unit type</label>
+                    <select id="unit-type-input" name="unitTypeId">
+                        for _, v := range unitTypes {
+                            <option value={fmt.Sprint(v.UnitTypeId)} selected?={v.UnitTypeId == workout.UnitTypeId}>{v.Name}</option>
+                        }
+                    </select>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                @input("Sets", "sets", "sets", "number", fmt.Sprint(workout.Sets))
+            </fieldset>
+            
+            <fieldset>
+                <div class="input-wrapper">
+                    <label for="weight-input">Weight</label>
+                    <input id="weight-input" name="weight" type="number" step="0.5" value={fmt.Sprint(workout.Weight)} />
+                </div>
+            </fieldset>
+            
+            <button type="submit">Save</button>
+        </form>
+    </div>
+}
+
+templ CreateExercise(workoutId string, exerciseDefs []models.ExerciseDef, equipment []models.Equipment, unitTypes []models.UnitType) {
+    <div id="workouts-page__workout_exercises">
+        <h3>
+            <span>New exercise</span>
+            <a href="/workouts">Go back</a>
+        </h3>
+        <form id="exercise-form" hx-post={ fmt.Sprintf("/workouts/edit/%s/exercises/new", workoutId) } hx-swap="outerHTML" hx-target="#workouts-page__workout_exercises" hx-ext="multi-swap">
+            <fieldset>
+                @input("Name", "exercise-name", "name", "text", "")
+            </fieldset>
+            
+            <fieldset id="details-inputs">
+                <div class="input-wrapper">
+                    <label for="exercise-def-input">Exercise type</label>
+                    <input id="exercise-def-input" name="exerciseDefId" />
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="equipment-input">Equipment</label>
+                    <input id="equipment-input" name="equipmentId" />
+                </div>
+            </fieldset>
+            
+            <fieldset id="time-inputs">
+                @input("Hours", "hours", "hours", "number", "")
+                
+                @input("Minutes", "minutes", "minutes", "number", "")
+                
+                @input("Seconds", "seconds", "seconds", "number", "")
+            </fieldset>
+            
+            <fieldset id="units-inputs">
+                @input("Units", "units", "units", "number", "")
+                
+                <div class="input-wrapper">
+                    <label for="unit-type-input">Unit type</label>
+                    <input id="unit-type-input" name="unitTypeId" />
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                @input("Sets", "sets", "sets", "number", "")
+            </fieldset>
+            
+            <fieldset>
+                <div class="input-wrapper">
+                    <label for="weight-input">Weight</label>
+                    <input id="weight-input" name="weight" type="number" step="0.5" />
+                </div>
+            </fieldset>
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+}
