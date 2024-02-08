@@ -313,8 +313,15 @@ a:hover {
 #workouts-page .workouts-page__list {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: calc(100vh - 300px);
   gap: 10px;
+  -moz-column-gap: 20px;
+       column-gap: 20px;
 }
+#workouts-page .workouts-page__exercise,
 #workouts-page .workouts-page__workout {
   display: flex;
   flex-direction: row;
@@ -324,8 +331,9 @@ a:hover {
   border-radius: 8px;
   border: thin solid rgba(255, 255, 255, 0.1215686275);
   background-color: #121212;
-  width: 300px;
+  width: 500px;
 }
+#workouts-page .workouts-page__exercise_description,
 #workouts-page .workouts-page__workout_description {
   display: flex;
   flex-direction: column;

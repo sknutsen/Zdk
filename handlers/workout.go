@@ -231,10 +231,11 @@ func (handler *WorkoutHandler) Edit(c *fiber.Ctx) error {
 
 	return view.Render(c, view.EditWorkout(
 		&models.DTOWorkoutUpdateRequest{
-			WorkoutId: workout.WorkoutId,
-			Name:      workout.Name,
-			Date:      workout.Date,
-			Exercises: exercises,
+			WorkoutId:   workout.WorkoutId,
+			Name:        workout.Name,
+			Date:        workout.Date,
+			Description: workout.Description,
+			Exercises:   exercises,
 		},
 	))
 }

@@ -1,13 +1,21 @@
 #workouts-page {
+  &__content {
+  }
   .workouts-page__content {
   }
 
   .workouts-page__list {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: calc(100vh - 300px);
     gap: 10px;
+    column-gap: 20px;
   }
 
+  .workouts-page__exercise,
   .workouts-page__workout {
     display: flex;
     flex-direction: row;
@@ -17,7 +25,7 @@
     border-radius: 8px;
     border: thin solid $outline;
     background-color: $surface;
-    width: 300px;
+    width: 500px;
 
     &_buttons {
     }
