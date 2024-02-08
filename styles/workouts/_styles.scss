@@ -4,13 +4,23 @@
   .workouts-page__content {
   }
 
+  #workouts-page__workout_exercises {
+    .workouts-page__list {
+      max-height: calc(100vh - 540px);
+      max-width: calc(100vw - 70px);
+    }
+  }
+
   .workouts-page__list {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
-    height: calc(100vh - 300px);
+    max-height: calc(100vh - 250px);
+    max-width: calc(100vw - 70px);
+    overflow-y: auto;
+    overflow-x: hidden;
     gap: 10px;
     column-gap: 20px;
   }
@@ -26,7 +36,20 @@
     border: thin solid $outline;
     background-color: $surface;
     width: 500px;
+  }
 
+  .workouts-page__exercise {
+    &_buttons {
+    }
+
+    &_description {
+      display: flex;
+      flex-direction: column;
+      color: $on-primary-variant;
+    }
+  }
+
+  .workouts-page__workout {
     &_buttons {
     }
 

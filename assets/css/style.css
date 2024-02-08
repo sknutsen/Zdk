@@ -310,13 +310,20 @@ a:hover {
   text-decoration: none;
 }
 
+#workouts-page #workouts-page__workout_exercises .workouts-page__list {
+  max-height: calc(100vh - 540px);
+  max-width: calc(100vw - 70px);
+}
 #workouts-page .workouts-page__list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  height: calc(100vh - 300px);
+  max-height: calc(100vh - 250px);
+  max-width: calc(100vw - 70px);
+  overflow-y: auto;
+  overflow-x: hidden;
   gap: 10px;
   -moz-column-gap: 20px;
        column-gap: 20px;
@@ -333,7 +340,11 @@ a:hover {
   background-color: #121212;
   width: 500px;
 }
-#workouts-page .workouts-page__exercise_description,
+#workouts-page .workouts-page__exercise_description {
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+}
 #workouts-page .workouts-page__workout_description {
   display: flex;
   flex-direction: column;

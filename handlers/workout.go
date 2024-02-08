@@ -50,11 +50,11 @@ func (handler *WorkoutHandler) List(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	var tasks []models.Workout
+	var workouts []models.Workout
 
-	handler.Ctx.DB.Where("user_id = ?", userId).Find(&tasks)
+	handler.Ctx.DB.Where("user_id = ?", userId).Order("date DESC").Find(&workouts)
 
-	return view.Render(ctx, view.ListWorkouts(tasks))
+	return view.Render(ctx, view.ListWorkouts(workouts))
 }
 
 func (handler *WorkoutHandler) New(ctx *fiber.Ctx) error {
@@ -227,7 +227,7 @@ func (handler *WorkoutHandler) Edit(c *fiber.Ctx) error {
 		return err
 	}
 
-	handler.Ctx.DB.Where("user_id = ? AND workout_id = ?", userId, id).Find(&exercises)
+	handler.Ctx.DB.Where("user_id = ? AND workout_id = ?", userId, id).Order("date_created ASC").Find(&exercises)
 
 	return view.Render(c, view.EditWorkout(
 		&models.DTOWorkoutUpdateRequest{
@@ -261,11 +261,11 @@ func (handler *WorkoutHandler) ListExercises(c *fiber.Ctx) error {
 
 	wid := c.Params("wid")
 
-	var tasks []models.Exercise
+	var exercises []models.Exercise
 
-	handler.Ctx.DB.Where("user_id = ? AND workout_id = ?", userId, wid).Find(&tasks)
+	handler.Ctx.DB.Where("user_id = ? AND workout_id = ?", userId, wid).Order("date_created ASC").Find(&exercises)
 
-	return view.Render(c, view.ListExercises(wid, tasks))
+	return view.Render(c, view.ListExercises(wid, exercises))
 }
 
 func (handler *WorkoutHandler) NewExercise(c *fiber.Ctx) error {

@@ -20,8 +20,6 @@ func setupWorkoutsRoutes(
 	log *zap.Logger,
 ) {
 	workoutsGroup := app.Group("/workouts")
-	// tasksGroup.Use(mw.GetAuthMiddleware())
-	// tasksGroup.Use(middleware.EnsureValidScope)
 	workoutsGroup.Get("/", mw.IsAuthenticated, func(c *fiber.Ctx) error {
 		session, err := sessionManager.SessionStore.Get(c)
 		if err != nil {
@@ -43,7 +41,7 @@ func setupWorkoutsRoutes(
 
 		var tasks []models.Workout
 
-		workoutHandler.Ctx.DB.Where("user_id = ?", userId).Find(&tasks)
+		workoutHandler.Ctx.DB.Where("user_id = ?", userId).Order("date DESC").Find(&tasks)
 
 		state := models.GetWorkoutState(profile)
 
