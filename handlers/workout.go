@@ -430,9 +430,9 @@ func (handler *WorkoutHandler) CreateExercise(c *fiber.Ctx) error {
 	var equipment []models.Equipment
 	var unitTypes []models.UnitType
 
-	handler.Ctx.DB.Find(&exerciseDefs)
-	handler.Ctx.DB.Find(&equipment)
-	handler.Ctx.DB.Find(&unitTypes)
+	handler.Ctx.DB.Order("name ASC").Find(&exerciseDefs)
+	handler.Ctx.DB.Order("name ASC").Find(&equipment)
+	handler.Ctx.DB.Order("name ASC").Find(&unitTypes)
 
 	return view.Render(c, view.CreateExercise(wid, exerciseDefs, equipment, unitTypes))
 }
@@ -467,9 +467,9 @@ func (handler *WorkoutHandler) EditExercise(c *fiber.Ctx) error {
 	var equipment []models.Equipment
 	var unitTypes []models.UnitType
 
-	handler.Ctx.DB.Find(&exerciseDefs)
-	handler.Ctx.DB.Find(&equipment)
-	handler.Ctx.DB.Find(&unitTypes)
+	handler.Ctx.DB.Order("name ASC").Find(&exerciseDefs)
+	handler.Ctx.DB.Order("name ASC").Find(&equipment)
+	handler.Ctx.DB.Order("name ASC").Find(&unitTypes)
 
 	return view.Render(c, view.EditExercise(
 		&models.DTOExerciseUpdateRequest{

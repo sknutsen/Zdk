@@ -4,6 +4,8 @@ VALUES
     ('Body'),
     ('Dumbbell'),
     ('Kettlebell'),
+    ('Machine'),
+    ('Trap bar'),
     ('Treadmill')
 ON CONFLICT (name) DO NOTHING;
 
@@ -31,11 +33,13 @@ VALUES
     ('Sled push'),
     ('Squat'),
     ('Squat thrust'),
+    ('Standing calf raise'),
     ('Walk')
 ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO unit_types(name)
-VALUES  
+VALUES
+    ('Calories'),
     ('Reps'),
-    ('Calories')
+    ('Meters')
 ON CONFLICT (name) DO NOTHING;
