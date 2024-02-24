@@ -15,16 +15,16 @@ type ScheduledTask struct {
 
 type ScheduledTasksByYear struct {
 	Year         int
-	TasksByMonth []ScheduledTasksByMonth
+	TasksByMonth *[]ScheduledTasksByMonth
 }
 
 type ScheduledTasksByMonth struct {
 	Month       time.Month
-	TaskHistory []DTOScheduledTaskListResponseData
+	TaskHistory *[]DTOScheduledTaskListResponseData
 }
 
 func GroupScheduledTasks(st []DTOScheduledTaskListResponseData) []ScheduledTasksByYear {
-	hist := []ScheduledTasksByYear{}
+	hist := &[]ScheduledTasksByYear{}
 	var yearExists bool
 	var monthExists bool
 
@@ -32,21 +32,21 @@ func GroupScheduledTasks(st []DTOScheduledTaskListResponseData) []ScheduledTasks
 		yearExists = false
 		monthExists = false
 
-		for _, y := range hist {
+		for _, y := range *hist {
 			if y.Year == t.Date.Year() {
 				yearExists = true
-				for _, m := range y.TasksByMonth {
+				for _, m := range *y.TasksByMonth {
 					if t.Date.Month() == m.Month {
 						monthExists = true
-						m.TaskHistory = append(m.TaskHistory, t)
+						*m.TaskHistory = append(*m.TaskHistory, t)
 						break
 					}
 				}
 
 				if !monthExists {
-					y.TasksByMonth = append(y.TasksByMonth, ScheduledTasksByMonth{
+					*y.TasksByMonth = append(*y.TasksByMonth, ScheduledTasksByMonth{
 						Month: t.Date.Month(),
-						TaskHistory: []DTOScheduledTaskListResponseData{
+						TaskHistory: &[]DTOScheduledTaskListResponseData{
 							t,
 						},
 					})
@@ -56,12 +56,12 @@ func GroupScheduledTasks(st []DTOScheduledTaskListResponseData) []ScheduledTasks
 		}
 
 		if !yearExists {
-			hist = append(hist, ScheduledTasksByYear{
+			*hist = append(*hist, ScheduledTasksByYear{
 				Year: t.Date.Year(),
-				TasksByMonth: []ScheduledTasksByMonth{
+				TasksByMonth: &[]ScheduledTasksByMonth{
 					{
 						Month: t.Date.Month(),
-						TaskHistory: []DTOScheduledTaskListResponseData{
+						TaskHistory: &[]DTOScheduledTaskListResponseData{
 							t,
 						},
 					},
@@ -70,7 +70,7 @@ func GroupScheduledTasks(st []DTOScheduledTaskListResponseData) []ScheduledTasks
 		}
 	}
 
-	return hist
+	return *hist
 }
 
 type DTOScheduledTaskListResponseData struct {

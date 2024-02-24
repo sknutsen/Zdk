@@ -98,7 +98,7 @@ func (handler *ScheduledTasksHandler) Schedule(c *fiber.Ctx) error {
 
 	var history []models.DTOScheduledTaskListResponseData
 
-	handler.Ctx.DB.Model(&models.ScheduledTask{}).Select("scheduled_tasks.scheduled_task_id, tasks.task_id, tasks.name, scheduled_tasks.is_complete, scheduled_tasks.date").Where("tasks.user_id = ? AND scheduled_tasks.date <= ?", userId, time.Date(year, month, day, 0, 0, 0, 0, time.UTC)).Joins("INNER JOIN tasks ON tasks.task_id = scheduled_tasks.task_id").Find(&history)
+	handler.Ctx.DB.Model(&models.ScheduledTask{}).Select("scheduled_tasks.scheduled_task_id, tasks.task_id, tasks.name, scheduled_tasks.is_complete, scheduled_tasks.date").Where("tasks.user_id = ? AND scheduled_tasks.date <= ?", userId, time.Date(year, month, day, 0, 0, 0, 0, time.UTC)).Joins("INNER JOIN tasks ON tasks.task_id = scheduled_tasks.task_id").Order("scheduled_tasks.date DESC").Find(&history)
 
 	state.TaskHistory = models.GroupScheduledTasks(history)
 

@@ -235,7 +235,7 @@ func scheduler(list []models.ScheduledTasksByYear) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for _, month := range year.TasksByMonth {
+			for _, month := range *year.TasksByMonth {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><h5>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -249,7 +249,7 @@ func scheduler(list []models.ScheduledTasksByYear) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				for _, v := range month.TaskHistory {
+				for _, v := range *month.TaskHistory {
 					templ_7745c5c3_Err = scheduledTask(v).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err

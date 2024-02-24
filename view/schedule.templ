@@ -53,12 +53,12 @@ templ scheduler(list []models.ScheduledTasksByYear) {
                 <h4>{ fmt.Sprint(year.Year) }</h4>
 
                 <div>
-                    for _, month := range year.TasksByMonth {
+                    for _, month := range *year.TasksByMonth {
                         <div>
                             <h5>{ month.Month.String() }</h5>
 
                             <div>
-                                for _, v := range month.TaskHistory {
+                                for _, v := range *month.TaskHistory {
                                     @scheduledTask(v)
                                 }
                             </div>
